@@ -33,7 +33,7 @@ a{color:inherit;text-decoration:none}
 .nav svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
 /* HOJE: céu */
-.sky{position:relative;height:calc(480px + var(--safe-top));overflow:hidden;transition:background 1.2s}
+.sky{position:relative;height:calc(440px + var(--safe-top));overflow:hidden;transition:background 1.2s}
 .sky canvas,.sky .stars{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff}
 .cloud{position:absolute;border-radius:50%;background:rgba(255,255,255,.2);filter:blur(26px);animation:drift linear infinite}
@@ -44,11 +44,6 @@ a{color:inherit;text-decoration:none}
 .oi{font-size:24px;font-weight:600;margin-top:2px}
 .temp{font-size:118px;font-weight:300;line-height:.95;letter-spacing:-5px;margin-top:20px}
 .cond{font-size:17px;font-weight:600;margin-top:8px}
-.rb{width:230px;margin-top:16px}
-.rbar{display:flex;align-items:flex-end;gap:4px;height:34px}
-.rbar i{flex:1;background:rgba(170,220,255,.9);border-radius:3px 3px 1px 1px;min-height:2px}
-.rl{display:flex;justify-content:space-between;font-size:11px;margin-top:5px;opacity:.9}
-.rl b{font-weight:700}
 .vivo{font-size:11px;opacity:.7;margin-top:8px}
 
 .resumo{padding:0 22px;position:relative;z-index:3;margin-top:-6px}
@@ -143,10 +138,6 @@ a{color:inherit;text-decoration:none}
       <div class="oi" id="oi">Bom dia, Phelipe</div>
       <div class="temp" id="temp">--°</div>
       <div class="cond" id="cond">Carregando…</div>
-      <div class="rb">
-        <div class="rbar" id="rbar"></div>
-        <div class="rl"><span id="rl0"></span><b id="rlm"></b><span id="rl1"></span></div>
-      </div>
       <div class="vivo" id="vivo"></div>
     </div>
   </div>
@@ -294,13 +285,14 @@ function ic(code,day){
 
 /* ---------- tempo ---------- */
 function idxAgora(w){const T=w.hourly.time.map(t=>new Date(t));let i=T.findIndex(t=>t.getTime()>Date.now()-36e5);return[T,i<0?0:i]}
-function barraChuva(w){
-  const[T,i]=idxAgora(w),P=w.hourly.precipitation_probability.slice(i,i+12),Hs=T.slice(i,i+12);
-  $('rbar').innerHTML=P.map(p=>`<i style="height:${Math.max(4,p)}%;opacity:${(.35+p/160).toFixed(2)}"></i>`).join('');
-  const mx=Math.max(...P),k=P.indexOf(mx);
-  $('rl0').textContent=Hs[0].getHours()+'h';$('rl1').textContent=Hs[Hs.length-1].getHours()+'h';
-  $('rlm').textContent=mx>=50?`mais chuva às ${Hs[k].getHours()}h`:mx>=25?`chance de chuva às ${Hs[k].getHours()}h`:'sem chuva prevista';
-  return{mx,hora:Hs[k].getHours()};
+// Chuva que importa para o resumo: de dia, o resto do dia; à noite (19h em diante), o dia seguinte
+function chuvaPrevista(w){
+  const T=w.hourly.time.map(t=>new Date(t)),P=w.hourly.precipitation_probability,a=new Date();
+  const amanha=a.getHours()>=19,alvo=new Date(a);if(amanha)alvo.setDate(a.getDate()+1);
+  const dia=alvo.toDateString(),ini=amanha?6:Math.max(a.getHours(),6);
+  let mx=0,hora=null;
+  T.forEach((t,i)=>{if(t.toDateString()===dia&&t.getHours()>=ini&&t.getHours()<=21&&P[i]>mx){mx=P[i];hora=t.getHours()}});
+  return{mx,hora,amanha,tmax:Math.round(w.daily.temperature_2m_max[amanha?1:0])};
 }
 function sol(w){
   const R=w.daily.sunrise.map(t=>new Date(t)),S=w.daily.sunset.map(t=>new Date(t)),a=new Date();
@@ -362,7 +354,7 @@ const clima=aoVivo(WURL,()=>dados.then(d=>d.clima)).then(({d:w,vivo})=>{
   $('cond').textContent=`${WMO[code]||'—'} · máx ${Math.round(w.daily.temperature_2m_max[0])}°`;
   $('vivo').textContent=(vivo?'ao vivo ':'dados das ')+hm(new Date(c.time));
   chovendo=code>=51||c.precipitation>0;ceu(chovendo);
-  previsao=barraChuva(w);previsao.tmax=Math.round(w.daily.temperature_2m_max[0]);
+  previsao=chuvaPrevista(w);
   $('rainmax').textContent=`chuva até ${w.daily.precipitation_probability_max[0]}% hoje`;
   sol(w);setInterval(()=>sol(w),6e4);horas(w,c);dias(w,c);
   return previsao;
@@ -414,13 +406,14 @@ dados.then(d=>{
   // Seu resumo: regras simples, montadas aqui mesmo
   clima.then(p=>{
     const L=[];
-    if(p){if(p.mx>=50)L.push(['#1d3346','☂',`Leve guarda-chuva: <b>${p.mx}% de chuva</b> por volta das ${p.hora}h`]);
-      else if(p.mx>=25)L.push(['#1d3346','☁',`Pode chover um pouco: <b>${p.mx}%</b> por volta das ${p.hora}h`]);
-      else if(p.tmax>=30)L.push(['#3a2a1c','☀',`Dia quente: máxima de <b>${p.tmax}°</b>`]);
-      else L.push(['#1d3346','☀',`<b>Sem chuva</b> prevista nas próximas horas`])}
+    if(p){const q=p.amanha?'Amanhã: ':'';
+      if(p.mx>=50)L.push(['#1d3346','☂',`${q}leve guarda-chuva, <b>${p.mx}% de chuva</b> por volta das ${p.hora}h`]);
+      else if(p.mx>=25)L.push(['#1d3346','☁',`${q}pode chover um pouco, <b>${p.mx}%</b> por volta das ${p.hora}h`]);
+      else if(p.tmax>=30)L.push(['#3a2a1c','☀',`${q}dia quente, máxima de <b>${p.tmax}°</b>`]);
+      else L.push(['#1d3346','☀',`${q}<b>sem chuva</b> prevista`+(p.amanha?'':' até a noite')])}
     (d.avisos_sp||[]).slice(0,1).forEach(a=>L.push(['#2b2340','⇄',esc(a.titulo)]));
     if(D[0])L.push(['#3a2a1c','★',`Em destaque: <b>${esc(D[0].titulo)}</b>`]);
-    $('resumo').innerHTML=L.map(([bg,i,t])=>`<div class="bl"><div class="ic" style="background:${bg}">${i}</div><div>${t}</div></div>`).join('');
+    $('resumo').innerHTML=L.map(([bg,i,t])=>`<div class="bl"><div class="ic" style="background:${bg}">${i}</div><div>${t[0].toUpperCase()+t.slice(1)}</div></div>`).join('');
   });
 });
 
