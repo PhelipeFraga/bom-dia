@@ -221,10 +221,14 @@ def neste_dia(hoje):
 
 
 CLIMA_URL = ("https://api.open-meteo.com/v1/forecast?latitude=-23.55&longitude=-46.63"
-             "&current=temperature_2m,weather_code,precipitation"
-             "&hourly=temperature_2m,precipitation_probability,weather_code"
+             "&current=temperature_2m,apparent_temperature,weather_code,precipitation"
+             "&hourly=temperature_2m,precipitation_probability,precipitation,weather_code"
              "&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max"
              "&timezone=America%2FSao_Paulo&forecast_days=7")
+
+
+AR_URL = ("https://air-quality-api.open-meteo.com/v1/air-quality?latitude=-23.55&longitude=-46.63"
+          "&current=us_aqi,pm2_5&timezone=America%2FSao_Paulo")
 
 
 def json_de(url, nome):
@@ -254,6 +258,7 @@ def main():
         "palavra": palavra(agora),
         "clima": json_de(CLIMA_URL, "clima"),
         "radar": json_de("https://api.rainviewer.com/public/weather-maps.json", "radar"),
+        "ar": json_de(AR_URL, "qualidade do ar"),
     }
     (RAIZ / "data.json").write_text(json.dumps(dados, ensure_ascii=False, indent=1), encoding="utf-8")
     total = sum(len(v) for v in dados["noticias"].values())
