@@ -95,7 +95,10 @@ a{color:inherit;text-decoration:none}
 #smid{font-weight:700;color:var(--txt)}
 .seg{display:inline-flex;background:rgba(255,255,255,.07);border-radius:99px;padding:3px;letter-spacing:0;text-transform:none}
 .sg{font-size:13px;font-weight:600;padding:5px 14px;border-radius:99px;color:var(--dim);cursor:pointer}
-.sg.on{background:var(--txt);color:var(--bg)}
+.sg.on,.sg2.on{background:var(--txt);color:var(--bg)}
+.sg2{font-size:12.5px;font-weight:600;padding:5px 13px;border-radius:99px;color:var(--dim);cursor:pointer}
+.mmx span.ag{color:var(--txt);font-weight:700}
+.mm div.ag i{box-shadow:0 0 0 1.5px #fff}
 .hrs{display:flex;gap:6px;overflow-x:auto;margin:0 -18px;padding:0 18px 4px;scrollbar-width:none}
 .hrs::-webkit-scrollbar{display:none}
 .hr{flex:none;width:58px;padding:12px 0;border-radius:18px;text-align:center}
@@ -152,7 +155,7 @@ a{color:inherit;text-decoration:none}
     <div><span class="ar" id="ar" style="display:none"><i></i><span></span></span><span class="vivo" id="vivo"></span></div>
   </div>
   <div class="glass">
-    <div class="gh"><span class="tag dim" id="titchuva">Chuva</span><b id="picochuva"></b></div>
+    <div class="gh"><span class="seg"><span class="sg2" data-d="0">Hoje</span><span class="sg2" data-d="1">Amanhã</span></span><b id="picochuva"></b></div>
     <div class="mm" id="mmbar"></div>
     <div class="mmx" id="mmx"></div>
     <div class="mmt"><span id="mmtot"></span><span>em milímetros</span></div>
@@ -179,7 +182,7 @@ a{color:inherit;text-decoration:none}
 
 <!-- ============ TEMPO ============ -->
 <section class="tela" id="t-tempo">
-  <div class="hd"><div class="tag dim">São Paulo</div><h1>Tempo</h1></div>
+  <div class="hd"><div class="tag dim" id="tdata">São Paulo</div><h1>Tempo</h1></div>
   <div class="box">
     <div class="h">Sol</div>
     <div class="sunw">
@@ -248,6 +251,7 @@ addEventListener('load',()=>{const b=document.querySelector(`.nav button[data-t=
 
 /* ---------- atmosfera ---------- */
 $('dia').textContent=agora.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
+$('tdata').textContent='São Paulo · '+agora.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
 $('oi').textContent=(H>=5&&H<12?'Bom dia':H>=12&&H<18?'Boa tarde':'Boa noite')+', Phelipe';
 const noite=H<5||H>=19;
 // Duas luzes suaves sobre o fundo escuro; as cores seguem a hora do dia (e ficam acinzentadas com chuva)
@@ -270,22 +274,24 @@ for(const d of gotas){d.y+=d.v;if(d.y>1){d.y=-.05;d.x=Math.random()}const X=d.x*
 requestAnimationFrame(loop)})();
 
 /* ---------- chuva em milímetros ---------- */
-// De dia: as próximas 12 horas. Depois das 19h: o dia de amanhã, das 6h às 21h (mesma regra do resumo)
-function graficoChuva(w){
-  const T=w.hourly.time.map(t=>new Date(t)),a=new Date(),amanha=a.getHours()>=19;
-  let i,n;
-  if(amanha){const d=new Date(a);d.setDate(a.getDate()+1);i=T.findIndex(t=>t.toDateString()===d.toDateString()&&t.getHours()===6);n=16}
-  else{i=T.findIndex(t=>t.getTime()>Date.now()-36e5);n=12}
-  if(i<0)i=0;
-  const MM=w.hourly.precipitation.slice(i,i+n),P=w.hourly.precipitation_probability.slice(i,i+n),Hs=T.slice(i,i+n);
+// Chuva em mm de um dia inteiro (6h às 21h): Hoje ou Amanhã. Abre em Hoje até as 19h; depois, em Amanhã
+let previsaoChuva=null;
+function graficoChuva(w,qual){
+  previsaoChuva=w;
+  if(qual==null)qual=new Date().getHours()>=19?1:0;
+  document.querySelectorAll('.sg2').forEach(b=>b.classList.toggle('on',+b.dataset.d===qual));
+  const T=w.hourly.time.map(t=>new Date(t)),d=new Date();d.setDate(d.getDate()+qual);
+  let i=T.findIndex(t=>t.toDateString()===d.toDateString()&&t.getHours()===6);if(i<0)i=0;
+  const MM=w.hourly.precipitation.slice(i,i+16),P=w.hourly.precipitation_probability.slice(i,i+16),Hs=T.slice(i,i+16);
+  const agoraH=qual===0?new Date().getHours():-1;
   const teto=Math.max(2,...MM),fmt=v=>v.toLocaleString('pt-BR',{maximumFractionDigits:1});
-  $('titchuva').textContent=amanha?'Chuva amanhã':'Chuva · próximas 12 horas';
-  $('mmbar').innerHTML=MM.map((v,k)=>`<div><em>${v>=.5?fmt(v):''}</em><i style="height:${Math.max(3,v/teto*100*.82)}%;opacity:${v>0?(.45+P[k]/180).toFixed(2):.18}"></i></div>`).join('');
-  $('mmx').innerHTML=Hs.map((t,k)=>`<span>${!amanha&&k===0?'agora':k%3===0?t.getHours()+'h':''}</span>`).join('');
+  $('mmbar').innerHTML=MM.map((v,k)=>`<div class="${Hs[k].getHours()===agoraH?'ag':''}"><em>${v>=.5?fmt(v):''}</em><i style="height:${Math.max(3,v/teto*100*.82)}%;opacity:${v>0?(.45+P[k]/180).toFixed(2):.18}"></i></div>`).join('');
+  $('mmx').innerHTML=Hs.map((t,k)=>t.getHours()===agoraH?'<span class="ag">agora</span>':`<span>${k%3===0?t.getHours()+'h':''}</span>`).join('');
   const tot=MM.reduce((x,y)=>x+y,0),mx=Math.max(...MM),k=MM.indexOf(mx);
   $('picochuva').textContent=mx>=.1?`mais forte às ${Hs[k].getHours()}h · ${fmt(mx)} mm`:'sem chuva';
-  $('mmtot').textContent=tot>=.1?`total: ${fmt(tot)} mm`:'nada previsto';
+  $('mmtot').textContent=(tot>=.1?`total: ${fmt(tot)} mm`:'nada previsto')+' · '+d.toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'});
 }
+document.querySelectorAll('.sg2').forEach(b=>b.onclick=()=>{if(previsaoChuva)graficoChuva(previsaoChuva,+b.dataset.d)});
 
 /* ---------- qualidade do ar ---------- */
 function ar(a){
@@ -341,7 +347,7 @@ function horas(w,c){
   const rises=w.daily.sunrise.map(t=>new Date(t)),sets=w.daily.sunset.map(t=>new Date(t));
   const isDay=t=>rises.some((r,i)=>t>=r&&t<sets[i]);let items=[];
   for(let i=st;i<Math.min(st+24,T.length);i++){const t=T[i],p=w.hourly.precipitation_probability[i];
-    items.push({t,html:`<div class="hr${i===st?' now':''}"><div class="l">${i===st?'Agora':t.getHours()+'h'}</div>${ic(w.hourly.weather_code[i],isDay(t))}<div class="v">${Math.round(i===st?c.temperature_2m:w.hourly.temperature_2m[i])}°</div><div class="p">${p>=20?p+'%':''}</div></div>`})}
+    items.push({t,html:`<div class="hr${i===st?' now':''}"><div class="l"${i!==st&&t.getHours()===0?' style="color:var(--gold)"':''}>${i===st?'Agora':t.getHours()===0?t.toLocaleDateString('pt-BR',{weekday:'short'}).replace('.',''):t.getHours()+'h'}</div>${ic(w.hourly.weather_code[i],isDay(t))}<div class="v">${Math.round(i===st?c.temperature_2m:w.hourly.temperature_2m[i])}°</div><div class="p">${p>=20?p+'%':''}</div></div>`})}
   const end=items.length?items[items.length-1].t:ct;
   const up='<circle cx="12" cy="15" r="4.5" fill="#ffc94d"/><line x1="3" y1="20" x2="21" y2="20" stroke="#ffc27a" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3v5M9.5 5.5L12 3l2.5 2.5" fill="none" stroke="#ffc27a" stroke-width="1.6" stroke-linecap="round"/>';
   const dn='<circle cx="12" cy="15" r="4.5" fill="#ff9a5a"/><line x1="3" y1="20" x2="21" y2="20" stroke="#ffc27a" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3v5M9.5 5.5L12 8l2.5-2.5" fill="none" stroke="#ffc27a" stroke-width="1.6" stroke-linecap="round"/>';
