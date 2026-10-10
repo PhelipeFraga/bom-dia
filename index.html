@@ -205,8 +205,8 @@ a{color:inherit;text-decoration:none}
   <div class="box">
     <div class="h">Radar de chuva <b id="frametime"></b></div>
     <div id="map"></div>
-    <div class="mapbar"><span id="pp" style="cursor:pointer">❚❚</span><div class="prog"><i id="prog"></i></div><span>últimas 2h</span></div>
-    <div class="lg">fraca <i style="background:#88ddee"></i><i style="background:#0099cc"></i><i style="background:#ffaa00"></i><i style="background:#ff4400"></i> forte<span style="margin-left:auto">mapa: Esri · radar: RainViewer</span></div>
+    <div class="mapbar"><span id="pp" style="cursor:pointer">❚❚</span><div class="prog"><i id="prog"></i></div><span>2h atrás → +6h</span></div>
+    <div class="lg">fraca <i style="background:#88ddee"></i><i style="background:#0099cc"></i><i style="background:#ffaa00"></i><i style="background:#ff4400"></i> forte<span style="margin-left:auto">radar: RainViewer · previsão: Open-Meteo</span></div>
   </div>
 </section>
 
@@ -411,17 +411,50 @@ function novoMapa(id,interativo){
   L.circleMarker([LAT,LON],{radius:6,color:'#fff',weight:2,fillColor:'#8ab4ff',fillOpacity:1}).addTo(m);
   return m;
 }
+// Previsão para as próximas horas: o radar só mostra o passado, então depois do "agora" a animação
+// continua com a previsão de chuva (mm por hora) numa grade de 11 x 11 pontos ao redor de SP
+const GRADE={lat0:-24.4,dlat:.17,lon0:-47.6,dlon:.2,n:11};
+function corMm(v){return v<.1?null:v<.5?'#88ddee':v<2?'#0099cc':v<5?'#ffaa00':'#ff4400'}
+function camadaPrevisao(m,pontos,h){
+  const g=L.layerGroup(),{lat0,dlat,lon0,dlon,n}=GRADE;
+  pontos.forEach((p,k)=>{const v=p.hourly.precipitation[h],c=corMm(v);if(!c)return;
+    const la=lat0+Math.floor(k/n)*dlat,lo=lon0+(k%n)*dlon;
+    L.rectangle([[la-dlat/2,lo-dlon/2],[la+dlat/2,lo+dlon/2]],{stroke:false,fillColor:c,fillOpacity:.6,pane:'previsao',interactive:false}).addTo(g)});
+  return g;
+}
 try{
   mapa=novoMapa('map',true);const mapaHoje=novoMapa('mapa2',false);mapas=[mapa,mapaHoje];
+  mapas.forEach(m=>{const pn=m.createPane('previsao');pn.style.zIndex=420;pn.style.filter='blur(9px)';pn.style.pointerEvents='none'});
   $('mapa2').onclick=()=>document.querySelector('.nav button[data-t="tempo"]').click();
-  let frames=[],camadas=[],fi=0,rodando=true;
-  const mostra=i=>{camadas.forEach(par=>{par[fi]&&par[fi].setOpacity(0)});fi=i;camadas.forEach(par=>par[fi].setOpacity(.8));
-    const h=hm(new Date(frames[fi].time*1000));$('frametime').textContent=h;$('frametime2').textContent=h;
-    $('prog').style.width=((fi+1)/frames.length*100)+'%'};
-  aoVivo('https://api.rainviewer.com/public/weather-maps.json',()=>dados.then(d=>d.radar)).then(({d})=>{
-    if(!d)return;frames=d.radar.past;
-    camadas=mapas.map(m=>frames.map(f=>L.tileLayer(`${d.host}${f.path}/256/{z}/{x}/{y}/2/1_1.png`,{opacity:0,maxNativeZoom:7,maxZoom:12}).addTo(m)));
-    mostra(frames.length-1);setInterval(()=>{if(rodando)mostra((fi+1)%frames.length)},700);
+  // quadros: {tipo:'radar', camadas:[uma por mapa], quando} ou {tipo:'prev', ...}
+  let quadros=[],fi=-1,rodando=true,nPassado=0;
+  const mostra=i=>{
+    if(fi>=0)quadros[fi].camadas.forEach(c=>c.tipo==='radar'?c.l.setOpacity(0):c.m.removeLayer(c.l));
+    fi=i;const q=quadros[fi];
+    q.camadas.forEach(c=>c.tipo==='radar'?c.l.setOpacity(.8):c.l.addTo(c.m));
+    const rot=q.tipo==='radar'?hm(q.quando):`previsão ${q.quando.getHours()}h`;
+    $('frametime').textContent=rot;$('frametime2').textContent=rot;
+    ['frametime','frametime2'].forEach(id=>$(id).style.color=q.tipo==='radar'?'':'var(--gold)');
+    $('prog').style.width=((fi+1)/quadros.length*100)+'%';
+  };
+  const radar=aoVivo('https://api.rainviewer.com/public/weather-maps.json',()=>dados.then(d=>d.radar)).then(({d})=>d);
+  const lats=[],lons=[];for(let i=0;i<GRADE.n;i++)for(let j=0;j<GRADE.n;j++){lats.push((GRADE.lat0+i*GRADE.dlat).toFixed(2));lons.push((GRADE.lon0+j*GRADE.dlon).toFixed(2))}
+  const prev=fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&hourly=precipitation&forecast_hours=7&timezone=America%2FSao_Paulo`)
+    .then(r=>{if(!r.ok)throw 0;return r.json()}).catch(()=>null);
+  Promise.all([radar,prev]).then(([d,pontos])=>{
+    if(d)d.radar.past.forEach(f=>quadros.push({tipo:'radar',quando:new Date(f.time*1000),
+      camadas:mapas.map(m=>({tipo:'radar',m,l:L.tileLayer(`${d.host}${f.path}/256/{z}/{x}/{y}/2/1_1.png`,{opacity:0,maxNativeZoom:7,maxZoom:12}).addTo(m)}))}));
+    nPassado=quadros.length;
+    if(Array.isArray(pontos)&&pontos.length===GRADE.n*GRADE.n){
+      const T=pontos[0].hourly.time.map(t=>new Date(t));
+      for(let h=1;h<T.length;h++)quadros.push({tipo:'prev',quando:T[h],camadas:mapas.map(m=>({tipo:'prev',m,l:camadaPrevisao(m,pontos,h)}))});
+    }
+    if(!quadros.length)return;
+    // marca no trilho onde termina o passado e começa a previsão
+    $('prog').parentNode.style.background=nPassado<quadros.length?`linear-gradient(90deg,var(--line) ${nPassado/quadros.length*100}%,rgba(255,208,138,.25) 0)`:'';
+    mostra(Math.max(0,nPassado-1));
+    const passo=()=>{if(rodando)mostra((fi+1)%quadros.length);setTimeout(passo,quadros[fi].tipo==='radar'?700:1300)};
+    setTimeout(passo,1200);
   });
   $('pp').onclick=e=>{rodando=!rodando;e.target.textContent=rodando?'❚❚':'▶'};
 }catch(e){$('map').innerHTML=$('mapa2').innerHTML='<p style="padding:20px;color:#888">Mapa indisponível</p>'}
