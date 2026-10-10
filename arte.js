@@ -50,7 +50,7 @@
       if(dia){html=icone('clear-day');tipo='sol'}
       else{html=lua(p);tipo='noite';estrelas=180;legenda=`${nomeFase(p)} · ${Math.round((1-Math.cos(2*Math.PI*p))/2*100)}% iluminada`}
     }
-    return{html,fundo:fundo(tipo),estrelas,chuva:chuva||temporal,raio:temporal,legenda};
+    return{html,fundo:fundo(tipo),tipo,estrelas,chuva:chuva||temporal,raio:temporal,legenda};
   };
 
   // Estrelas: tamanhos e brilhos variados, piscando; uma estrela cadente de vez em quando
@@ -74,5 +74,5 @@
       cx.globalAlpha=1;requestAnimationFrame(quadro);
     })(performance.now());
   };
-  window.faseLua=faseLua;
+  window.faseLua=faseLua;window.luaSVG=lua;window.nomeFase=nomeFase;
 })();
