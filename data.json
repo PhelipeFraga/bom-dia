@@ -1,30 +1,6 @@
 {
- "gerado_em": "2026-10-09T22:27-03:00",
+ "gerado_em": "2026-10-09T22:30-03:00",
  "destaques": [
-  {
-   "titulo": "Alcolumbre pauta votação do fim da escala 6 X 1 para 14 de outubro",
-   "fonte": "Poder360",
-   "quando": "2026-10-09T20:04:19-03:00",
-   "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxObnNGNEVzOEhVMWZXbDRDRkRBd19uc0FGaXVCTjFnbmozenlUOFE1NFQtcnpHYzlnNHA0Vzl4NFM4ZHMxR3JQenJja3pBdWUwbGZxakFwaWJSZUFSMzg2SDRCUEFFdVo3WFBLUmo4VG51QjFDZVN4ZFk4N2NBQ2k5U2lNWTAySHFMbU5yYlh3OTNpVDNLV3p1S3ladE9aSy1XRi0yS0x4MTg5NmpPMHJlSg?oc=5",
-   "tema": "Brasil",
-   "cobertura": 1
-  },
-  {
-   "titulo": "Governo Trump impõe sanções ao Tribunal Penal Internacional, horas após Nobel da Paz para juíza",
-   "fonte": "G1",
-   "quando": "2026-10-09T11:11:37-03:00",
-   "link": "https://news.google.com/rss/articles/CBMi4wFBVV95cUxObjRXVzZPZXlUcWhBMHFYY1pQYzUxMUxkV0V2MDlZNzdqbWxZY0FoYWRCakxIOTJ5cDVmMzZfckw1ckowWVE0TVR5RmNVUXhjdE0zNlZ4MTBFaXRzVExEcGtQenVValNlV0p6ZHBSdEZFbkQ4T3htWlI5ZVRSMjNrN0ttcTNSZzRBWGwtVjlVcDFXWWZqSkhSSDNWSlR3ZnBtdW11SndxNGphanItTEZwWlhKUU1DRjJfa1Z0b2gtck1UWjVaU0N1STJoV0dfc29VTnFaOFl1NTFuNV9hb3V2cDlCQdIB8gFBVV95cUxQLXFCbVVGRTZzUUFPZE1kSWh1N3QxUlZCZUtGbzNaX1MzSHdQa0E4b2N4VjZLb0NMTFYzNFVWaV95SWRTc0UwTUtjQzBhdG1WQUtKOXRDTnRpcVJjb0JlblZwMVFLMy1DVHlGazB6NHdZZkV0V0wwZ1pEVkRhQk8wd3ItOHYxYWh6dGRMLU9uY0NFd2czT1dHbnp4YnlocFlBRTNVXzl3Mi1kNlBheC13bWx5UVZSZTVhT1Z3WnBfNU51WUpJeWx5T01uWTRvN3VLNkdkNmRIYW1STS14dFRuWjRvNlN2bGg2bEhELS1Qa19DQQ?oc=5",
-   "tema": "Mundo",
-   "cobertura": 1
-  },
-  {
-   "titulo": "Governo zera impostos federais sobre a gasolina",
-   "fonte": "UOL Economia",
-   "quando": "2026-10-09T16:22:08-03:00",
-   "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOZHlSUWRVWk5nSUdqQmNFS2RubFp2WGpaUDdDb200cjFoYWdDbUQ2VXFMQUR1ZTRsUC1YSDBVdlV5eW5xRUNnRHFrV2NZUzZrLTZLaWZtS1NYYXl3QUc4ZVpOaVZwejRqODFiT3EwWEZZOS1hRm5uTnRmZDdFQmhqNUFGSmRXc0RxQmlWUWY3WUE4bWVwajZBWHp6b2hCcVNLWFRjYUFETUZEWVZIUjVqNkFpMlc0V0hCRnJhdkwzMTFaNWZ6?oc=5",
-   "tema": "Economia",
-   "cobertura": 1
-  },
   {
    "titulo": "YouTube Music testa design mais moderno com capas gigantes em álbuns e playlists",
    "fonte": "Canaltech",
@@ -32,203 +8,14 @@
    "link": "https://canaltech.com.br/apps/youtube-music-testa-design-mais-moderno-com-capas-gigantes-em-albuns-e-playlists/",
    "tema": "IA e tech",
    "cobertura": 1
-  },
-  {
-   "titulo": "Selfie postada no Instagram revelou espécie amazônica inédita para a ciência",
-   "fonte": "Globo",
-   "quando": "2026-10-09T13:27:07-03:00",
-   "link": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxOaVl3WEZUejFvMEdFQV9YdlRMX2Z1dkpndExIZVg1V2tJVV9mRXBHamNvT3RBb2YxSzhDX1RvUjh1TGRwNXVKZmNUUVg5UDJ0T3M3bXBhdW1sc2Y4YXpNZXdNM2xHMEFuZ2lkdjFBVVdxb3VPWElBYUtnTG5jYjBIeDVUWENyUXNBeUZvTUVHYTB2UEZNS3ZPd0FyMjAweGp6WHA3RGNZQ0Jway13VThwQ0hYemFrT0k1YjJ1NHp5MXBsV0ZUN3RiMmx6LUJNSzNJLXh0a3FR0gHkAUFVX3lxTE5FTFlOaUtlR0drSHRDbjlaV1JvMEVENTFqVjRkdUU3ajZmM1NZN09tQXB3RTNDdnhzbVEzaDlEQ1pBOG9VQjFBLW5zWV9zUWZocWJVeVVYVDRyLWdvQ25YdEVsRHBJRm9OVC1JQUpHZjNGZ0hsVmNmb1ZwRk5xRk1xZXNkWVk4UC1xRTZuN2N1dXQ0ZjA0aU1hdmUzdkxnUGxpbXZCemphRjQyeWlYMVZ0dEM3TjkzdWZQRzZrNmdmQ2xwLVkwVzBDTDYzUlJLRzdiN3B4dWNyLUt0RjEzQ3pfWUlSVw?oc=5",
-   "tema": "Ciência",
-   "cobertura": 1
   }
  ],
- "avisos_sp": [
-  {
-   "titulo": "Linha 1-Azul do Metrô de SP opera com velocidade reduzida após interferência na via; Linha 5-Lilás também registra falha e aciona Paese",
-   "fonte": "G1",
-   "quando": "2026-10-09T06:52:08-03:00",
-   "link": "https://news.google.com/rss/articles/CBMingJBVV95cUxNN081RGgzVi1xRTF5SDIwbkVrNHRBWkxWbEQtSGd1RDlJUGdXbUM3RWlEaEpYWi1Xdy1PVWZTbkdmaFl1WXhETmp6cUVEX0NWLXEtNkJyREI0RjE2SlM1bWl5V2t5Q1hjZ1JaT2hkbGFuUkdqdDBFOG5SMFlQOXp4Z0Zwc3I0NFRxUHoxOVFfM3hsTEhfeGQ3eVNrdkVRUXo5ZnZOYVpmVThkSXRfdUtiQnItM3NmRGUxaFBOX01pUnQtZjdnT2xETlhHQjU1U0xHNWItYUs1cmVXTjJxRUNWNGFYbUtpam5naEdUa3puR1pmWWxucHJRTElJX2QtbFVnQnRsYVJIUXlfSWhwSGkyZkRrekFYdWt5V25ubzN30gGsAkFVX3lxTE1Ba1NWdUhJeW4wQ3BQSmxWdjZwWGcwMG9BRkVQRHBuRTl6R0dCVEhwdHIzdXN2WGhqSjktQUF4WDRicnlwVG1xOVNHTjVoeVBpSkpwQTdBODVCT29nTWlhMXpMWV8wclpfTDVaWHZMbFBuRzY1aWFwNy1sc3hPbkVSUlVpQkJla3daWW1uRHdqeDkySDlhQXJFa3lTM2FGTk0xVTNvdDY1V2hEZnRLdHRaZHBjZktrTXJMRDlKTkdLVWdHTFFBeUlscDc4di1BMld1bjR1R3FKb2xjTjhodzY3cEYtWFVodnppWTJxb2J2RHpoaXMzbUNjdTNDWFlRczhZLWwwN1NlaGdtTzJUakNSdTRhUXdmOFd6TlBtSU5BaFE0OTZxSzBnVUloOQ?oc=5",
-   "tema": "São Paulo",
-   "cobertura": 1
-  },
-  {
-   "titulo": "Cidade de SP entra em estado de atenção para alagamentos em todas as regiões nesta sexta-feira",
-   "fonte": "G1",
-   "quando": "2026-10-09T17:58:04-03:00",
-   "link": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxQMnIxcnRjeWRRQUxLVkpCS1VvN3Y1M3ZiOGdTSDlOT3NrYVVERmtDWGdLYkRNTzV5Q1BGck9PcDRzUFNPN0N5TDFYNW5PY3VKUFJ5ZUh6ZXU5Y1Nsb0diUWswcGNXenhLX2s1cnN4ZFJ5YXFKemZPWWZTeG1pMTFpZkNzcFlHcXlycnhSWmxMc0JGR0JmTkhhVmdvY0thZlJtRHVfTDczTlFKYUlmbUE1MlpuU0ZPdXJfSkVzZlV4VnR6LWJDZFU1STBkdlpMa0ZTOERMbjF4N1NxZDNWY253ZUxMZkNCdTZBeElmak1QU1gwRUQzbXhV0gH3AUFVX3lxTFAycjFydGN5ZFFBTEtWSkJLVW83djUzdmI4Z1NIOU5Pc2thVURGa0NYZ0tiRE1PNXlDUEZyT09wNHNQU083Q3lMMVg1bk9jdUpQUnllSHpldTljU2xvR2JRazBwY1d6eEtfazVyc3hkUnlhcUp6Zk9ZZlN4bWkxMWlmQ3NwWUdxeXJyeFJabExzQkZHQmZOSGFWZ29jS2FmUm1EdV9MNzNOUUphSWZtQTUyWm5TRk91cl9KRXNmVXhWdHotYkNkVTVJMGR2WkxrRlM4RExuMXg3U3FkM1ZjbndlTExmQ0J1NkF4SWZqTVBTWDBFRDNteFU?oc=5",
-   "tema": "São Paulo",
-   "cobertura": 2
-  }
- ],
+ "avisos_sp": [],
  "noticias": {
-  "Brasil": [
-   {
-    "titulo": "Alcolumbre pauta votação do fim da escala 6 X 1 para 14 de outubro",
-    "fonte": "Poder360",
-    "quando": "2026-10-09T20:04:19-03:00",
-    "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxObnNGNEVzOEhVMWZXbDRDRkRBd19uc0FGaXVCTjFnbmozenlUOFE1NFQtcnpHYzlnNHA0Vzl4NFM4ZHMxR3JQenJja3pBdWUwbGZxakFwaWJSZUFSMzg2SDRCUEFFdVo3WFBLUmo4VG51QjFDZVN4ZFk4N2NBQ2k5U2lNWTAySHFMbU5yYlh3OTNpVDNLV3p1S3ladE9aSy1XRi0yS0x4MTg5NmpPMHJlSg?oc=5",
-    "tema": "Brasil",
-    "cobertura": 1
-   },
-   {
-    "titulo": "Ministério da Justiça pede à PF investigação sobre ameaças contra Ana Elisa, deputada eleita do PT",
-    "fonte": "CartaCapital",
-    "quando": "2026-10-09T16:31:00-03:00",
-    "link": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxQRGNIcDhOcEc3QmFQRElwVEhKUFZlSE8yX29GbDJFU1E4YXU1TnlzRml1a0hDM3FiOWRudzRwZGxTSWpRV3R3TnFROEhXZC14eGd2azgzWkw1dmFJQUFmWDRTanFsaWhJX04tWVVtLUo3WFFMQUdvaUpCQkNUZ3VMSDFtT0s5S0k5ZGVJN0dIWVkzemVaRS1kUzd6d1pNejJycDhtMTd5OS1SRi1FMUlJMTFIMTF6bXNHSXJ5a25vODFCaC1ZMkF0Nk5HYXJMSGMwUnhfdXNB?oc=5",
-    "tema": "Brasil",
-    "cobertura": 1
-   },
-   {
-    "titulo": "PT vai ao TSE para cassar a chapa de Flávio Bolsonaro por esquema com Pablo Marçal",
-    "fonte": "CartaCapital",
-    "quando": "2026-10-09T14:47:00-03:00",
-    "link": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxORUN4RVZZcWtXTkZYSGQwRDFjb2J5aU5yLUpFZWk1TEhVVDBNZjlQR2FkUHUyNGxFVHhtUkt6TjhuMFlVYWFjbnVjZFBNcmlDa0J0YUsyVUltMXVCUWtJWlA1cTQ1VFNpQkFJTU9MUmo2RnJxZWlKanpCWUFJdW9EZ0xGbzRaS0xCLXFqT3pRUGFSTTFFOGpHWDE4NE14cGdIbGExamZhZjVpdkVmdkFvYWpRRjM2Q2NDLTdRM2RjYXRBUQ?oc=5",
-    "tema": "Brasil",
-    "cobertura": 1
-   },
-   {
-    "titulo": "Avião que caiu sobre trilhos do metrô de BH era de 1988 e tinha capacidade para quatro pessoas; veja o modelo",
-    "fonte": "G1",
-    "quando": "2026-10-09T14:21:17-03:00",
-    "link": "https://news.google.com/rss/articles/CBMiywFBVV95cUxOQkJpTjhjc0ZodG02UXU0Tks1TnpWWDZhVWtBNlFiNFJnUzY0TVdPdFZ0NDIzWS1PTS01LUtoOFVRRUp1QlE0ZEpwdlhFTVgtSmlzYUlIQkI5QjdZRmQzOS0wSVYtcFQ4TWpQdVRlcUpEM3lpUjZVOFB3cHd4MW5MY183dE44TU95NnBEX2R0TFV1aWZRcGJDV2EwU2dJc21HZ2tJakZrUlRXdVVySlBES043QUxpRVRUM2I5YzhvSm9pZldLejlUMXFtUdIB2gFBVV95cUxQUlBnRk5JNjRVVGM0cXJpNW5Lb29VbGxTTTF0eERNTGptcjROUjlkRXBvMXlna0dmU253ekl5OHRab1NPdWpMakNtQ1pRVWZERXBheFRNY0s0eldQRFE4YmI3Ul9ObjNCYWo0YVNDdGdFVnJrNm9KR2Z0bWVrWmR5eUxZNW5BdnFmWVdTSXlOS21sd1FyMW5qdkpIWDhSWkJvODljdnpTbnc4TDY0YVhtYWM1ZU5NUjVHXzVmZGJZT3JzaXJxZl9fbVdEQ3ZSVDZhSTZjNmlDdkpIUQ?oc=5",
-    "tema": "Brasil",
-    "cobertura": 1
-   },
-   {
-    "titulo": "Renan Santos chama Cury de “comédia” após apoio a Flávio",
-    "fonte": "Poder360",
-    "quando": "2026-10-09T16:05:28-03:00",
-    "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxNcmRLRlJvc01lR2h4Q3FjT1hWcE9xNUhSaEtsMURta2FPRy0xcTdVYU9LYVMyUmtHVnczUTBPbmh3TlV0aWV6LVZ1ZXF6WnNVZ0ZuZXlFekdpZ09vYXBjVTY0QUdDbzl0Y1BKVTVTSVZnYkRyR0NITXk5S0FZOUpKSE9Cc1Zab3ktaFVCQVdIdnh1bmRpQTZZbTEwVTVDRmxYTm0xWHRn?oc=5",
-    "tema": "Brasil",
-    "cobertura": 1
-   }
-  ],
-  "Mundo": [
-   {
-    "titulo": "Governo Trump impõe sanções ao Tribunal Penal Internacional, horas após Nobel da Paz para juíza",
-    "fonte": "G1",
-    "quando": "2026-10-09T11:11:37-03:00",
-    "link": "https://news.google.com/rss/articles/CBMi4wFBVV95cUxObjRXVzZPZXlUcWhBMHFYY1pQYzUxMUxkV0V2MDlZNzdqbWxZY0FoYWRCakxIOTJ5cDVmMzZfckw1ckowWVE0TVR5RmNVUXhjdE0zNlZ4MTBFaXRzVExEcGtQenVValNlV0p6ZHBSdEZFbkQ4T3htWlI5ZVRSMjNrN0ttcTNSZzRBWGwtVjlVcDFXWWZqSkhSSDNWSlR3ZnBtdW11SndxNGphanItTEZwWlhKUU1DRjJfa1Z0b2gtck1UWjVaU0N1STJoV0dfc29VTnFaOFl1NTFuNV9hb3V2cDlCQdIB8gFBVV95cUxQLXFCbVVGRTZzUUFPZE1kSWh1N3QxUlZCZUtGbzNaX1MzSHdQa0E4b2N4VjZLb0NMTFYzNFVWaV95SWRTc0UwTUtjQzBhdG1WQUtKOXRDTnRpcVJjb0JlblZwMVFLMy1DVHlGazB6NHdZZkV0V0wwZ1pEVkRhQk8wd3ItOHYxYWh6dGRMLU9uY0NFd2czT1dHbnp4YnlocFlBRTNVXzl3Mi1kNlBheC13bWx5UVZSZTVhT1Z3WnBfNU51WUpJeWx5T01uWTRvN3VLNkdkNmRIYW1STS14dFRuWjRvNlN2bGg2bEhELS1Qa19DQQ?oc=5",
-    "tema": "Mundo",
-    "cobertura": 1
-   },
-   {
-    "titulo": "Alerta de tsunami é cancelado após terremoto de magnitude 7,7 no Panamá",
-    "fonte": "CNN Brasil",
-    "quando": "2026-10-09T17:42:08-03:00",
-    "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNVUdlajRObEhkZ1VET2xFMFJnU1Y1N0VHeklzdXVBNUtvM0huUnRkWWh3a3ZhWWZzYTA1eG80MDNFWm5xeW9vVkJKNHM1aDBHamhVNi1MNFlQZnFsT25VWkhkRzRoMUItaV85UVVlNkFqeXVZckpyMFZJdXZwZVJWZzBFa21BQkllUXhER08wU2lzZmdxUGpEMkNTdDNqNm56a0EzYkN1alFzMzVQR0lKRGdWRVQ?oc=5",
-    "tema": "Mundo",
-    "cobertura": 1
-   },
-   {
-    "titulo": "Trump anuncia acordo com Putin para fornecimento de diesel russo",
-    "fonte": "CNN Brasil",
-    "quando": "2026-10-09T19:06:58-03:00",
-    "link": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOTXdvZjVoM3JCelE2V2s4emlGYXZpeE4taHpXelB2dXdQYkdhTTRaWmRueEc5U0JUM0xwUTRrTmtVRUVzR3U0TUJ0OEtGZ00tWXhjLUtkUlNDMmF3UnZzU01sTHg0d0xmYXpzVDlFQ3Rwb25wcS0zYXZ2X19mcWpQRkVFdjMzVXFlNXZVenp2OVZ2MzZ5ZmNTNWJTWUpKczdOOE9yT1ctb1ZvVXkyLUpVc0J3dnRMSkVXMnZBMzhVb2c?oc=5",
-    "tema": "Mundo",
-    "cobertura": 1
-   },
-   {
-    "titulo": "Copiloto da FlyDubai planejava atentado em Israel inspirado no 11 de Setembro, diz investigação",
-    "fonte": "G1",
-    "quando": "2026-10-09T20:20:52-03:00",
-    "link": "https://news.google.com/rss/articles/CBMi3wFBVV95cUxOWDhDQ0NrN2l2OE9sU21IeTJ4Qi11YjdJNzhrTGlfR1JVU3lONUN2VFJaR09KaUs5QkYteTI5UjBXMnN0WnQtTlhBUXFpekotM1FBMjNtbElJYUQyZTZZWjV6alVEeXg4NUJvRzVYTkloRmw1LVRaMWlXUkZmbE1IakFBcmFmY0Z1eXdtWWxWNzdVWXhLMV9jX0NBVm9vdFM1VlczVEZydjRNTndvNzB5bGRvNy16LXZZeHRiVmhDNGVIRTkxNUs5Zm9FVFg4WjNqTFg0SHZhUXhUSzFpQVh30gHuAUFVX3lxTFBVeDNSZ1ZteXd1d0ZKTllCaUFTcjJVZDkxS0phQXpWMjNQd3BoRjdGYVl1ZlJoOW15dGJ2X1RaRkc3LVlxXzdUdGhmcnIxandXRS1uaWNRaEdsUTBWUG5rdEgxOWR6MjdxOUZJT1dvdjNhQ2pXM05xNFFUeTk1LXFiMnA2b0EzdV9zMWsxYlMyUllMZ0VSWmlpQ2hnWmlGVlVVSy1XOF9ERXM3MVFUd0VHeU1Ldk05R1hoOEdDWjMwdmdPRF9FbzltVVVnWTRveEs1dEZsZ0s0bFVnRnVlRk1vb2RZWHlSdXowaW1qRVE?oc=5",
-    "tema": "Mundo",
-    "cobertura": 1
-   },
-   {
-    "titulo": "Protestos estudantis continuam e governo da França promete 3 mil professores a mais nas escolas",
-    "fonte": "BBC",
-    "quando": "2026-10-09T14:50:22-03:00",
-    "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTFBfWERCX0M4c1RyaXB6clM1dUZ5T3NrcFpwWE91Z3ZmOW1ibF9rV29TQlRUaEY3alZhSXc4LTRDVVY2aFdUalJNTzUzejZySGxsQmN0aGtfN3Y0WDZ6cXdad1M3WdIBaEFVX3lxTFBTSTMtbDJmODBtX3RIOFhRX0cxSWpoLVpJbkxzc3A2NFZ5bFByckZWZkFPb0xZb2FCYjM0QlRRNTBCMjBjc3NZRFhYZTFIa1RXT2dudTdPNzZXZElWdFpUNVBTcUJsTERQ?oc=5",
-    "tema": "Mundo",
-    "cobertura": 1
-   }
-  ],
-  "Economia": [
-   {
-    "titulo": "Governo zera impostos federais sobre a gasolina",
-    "fonte": "UOL Economia",
-    "quando": "2026-10-09T16:22:08-03:00",
-    "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOZHlSUWRVWk5nSUdqQmNFS2RubFp2WGpaUDdDb200cjFoYWdDbUQ2VXFMQUR1ZTRsUC1YSDBVdlV5eW5xRUNnRHFrV2NZUzZrLTZLaWZtS1NYYXl3QUc4ZVpOaVZwejRqODFiT3EwWEZZOS1hRm5uTnRmZDdFQmhqNUFGSmRXc0RxQmlWUWY3WUE4bWVwajZBWHp6b2hCcVNLWFRjYUFETUZEWVZIUjVqNkFpMlc0V0hCRnJhdkwzMTFaNWZ6?oc=5",
-    "tema": "Economia",
-    "cobertura": 1
-   },
-   {
-    "titulo": "França pode ter cruzado linha entre ser grande demais para quebrar ou ser salva, diz Paul Krugman",
-    "fonte": "Valor Econômico",
-    "quando": "2026-10-09T15:45:38-03:00",
-    "link": "https://news.google.com/rss/articles/CBMi8AFBVV95cUxOWkxMZEdrSkJhZkVUZnJuVDVmQmtCMld1MXl4U25Da3VKX0trUzBid1BnWDFJRXhldldXc2ItMDlXUmxhMUt4bklqa1Jmcm9jdHRTaUVtd1ZWaWxleWxJQkxJOUVqM2NpYW1sYkpiWnNwRGJiREpWQ3lzWHNFWjZKUHF4RmRIM2R4NFN2R2VNT1huQ0Y2TlMxZzQ0YXJGUER1cGlqeWgtdEpZajZmeE1KNTFpRXB0bUpFVHRObVg3TmtxQl9NSHdncDN3UjZxSE1CVmo2T3BoOWktMDlpYUFBRXg2SmxWQWN4eUhBRDVGMUbSAf8BQVVfeXFMUEM0ODd1RDJSRVN1dmxFWGZiS0dRS2JXZW44OGMxcUtCcEE5LXliaEpFaE0yV3NxN01XUVpwX0NLVFI1RkE4a01STHE0NHdkWXhrMjBLU2prR1R2T1FVUTZtMUh6Z3hUaW9fVFp3M2RNQ01iR2JGS3AwUklmZjA5dk1ISTRDNmVnZi16SjBGZWljY2xwQnlNVGFyRHJIclB5X1ZxLUpXWkswUjlKeFZNWnpyNF9wNHh5WE03QWJ3bWpNRUxhZGx6N3pFbm9jYVRKUUEzUkk4WTBQSkRvWGVGOGlEemxoOXBrTDdDbDlVTHo2a2VGQ242M2NscTBvTmk0?oc=5",
-    "tema": "Economia",
-    "cobertura": 1
-   },
-   {
-    "titulo": "IPCA: Inflação sobe 0,82% em setembro, com alta da energia elétrica",
-    "fonte": "CNN Brasil",
-    "quando": "2026-10-09T09:02:38-03:00",
-    "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxPNFRaS2dFZzEySE9obUlucFR4dVRCSWtIWU93UDl4X0UyNEpKNlhaT3drVVFPdkVHNmJxQmNWWlNnalpiY2dqSjR0M3lVWTRIQjlpdk1wQnFLUjdtNmJhS25vQ3hvMlo4ZHpxTGZ4LTRONlNvb1pxenRuWHNSN3pmTU1pNnZFb2FzaWluX2xWQUc?oc=5",
-    "tema": "Economia",
-    "cobertura": 1
-   },
-   {
-    "titulo": "Entenda o split payment, centro da disputa entre Lula e Flávio Bolsonaro",
-    "fonte": "UOL Economia",
-    "quando": "2026-10-09T11:02:35-03:00",
-    "link": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNQTcwR3Y2b1hXT0VEdmI2QVNBMVE3eVM3ZnhjXzA4dmFHWDl3M19fNHR1QzZ2Zl9fSURPY2VrM2d6dEtmT3AxbkFVYTEwWEZ0czJDTmhwU2dIdDk2UXJ2M1lhakxTck5ZM0p3eElvNU1rc3BTRm5TeWxYUWItbE94SUJyY1hCbHNMTWVwRg?oc=5",
-    "tema": "Economia",
-    "cobertura": 1
-   },
-   {
-    "titulo": "USDA eleva produtividade de soja e milho dos EUA e estoques vêm acima do esperado pelo mercado",
-    "fonte": "Notícias Agrícolas",
-    "quando": "2026-10-09T13:02:17-03:00",
-    "link": "https://news.google.com/rss/articles/CBMi7gFBVV95cUxPYXZFWUV2cHVpcS0xN3Z4LXFnOWplNXZDM3ZTb3VmTjJrWWNYU2RQZ2dJMWxScTJQYU9KWjZOWE1sbU5VU3Z4alZycDlOSHNPdmxmUXFLV2YtaUdUSVFyU1l3TTlMNnJaV1cwdjJTYXVoY1VaVlVCTER1QS1lZHVmZmh6a1htYmdrS1JrN3FxWnpucXQ2WkZzMk5MaEM0QXhESEtwMGJuVTRfd29sZm9JeVVGNjYxNHBpVVh6T0s1bE1OemgzbkVwZFN4QVdPbkVxSHoyLUhYRTladVJES3pva0UyU0QtUV9wQTZUTzBn0gHzAUFVX3lxTFBsUW9CQU9Zam1nYWVmSVdqU1BCRFMxYWI5VlF3elFOQkFtWW03MmVDM2hYWDVadmZmNEpNNXhwZGhHUzQ2X2lvRFJOQXdDRkozYzNpSnIwRG51d0JpVjkxYXd6Z2xfQmt2dC11Q082V3AxMFFLNjJJVlVmSEFDei16WXcyOTJ6Xzc5Wk1tZG9QMlZGc3N2eC1rb3lHQ1BwbnUzbTZ6SHlsamduRUY0aG5PRE9IbGh5TmFPOXUxd1ZvcDRKVTBybXRRdUJIdDBQS24wajA1c0wtQUduZkZCZ3hzdTVNeF9XYzJoSEo4cjFlZjBmNA?oc=5",
-    "tema": "Economia",
-    "cobertura": 1
-   }
-  ],
-  "São Paulo": [
-   {
-    "titulo": "Sabesp afirma que água de Itapeva está dentro dos padrões após casos de gastroenterite",
-    "fonte": "Estadão",
-    "quando": "2026-10-09T21:20:24-03:00",
-    "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQQU9ReEhKYXp4LUVkTzBuNTNVUEptZDZxZU1WNEQ1TFhBYU5ZRkF4R2Uxa19VVVpwdzA5R0U1NVJKa1RkTUJQeGpRejN0V2RsS3A1Z1hTNWJTbkUtRlBWaS1SUUladGs1MkRmalNQMzY3UWpvR3VFY25uNG9aWTVQUFZfaGxZdWpDZEFyNTRydXNoQVpWemF6QW1oam5jQlNwNGZqdllRUTIwMWdENEthOGtyRdIBswFBVV95cUxQQU9ReEhKYXp4LUVkTzBuNTNVUEptZDZxZU1WNEQ1TFhBYU5ZRkF4R2Uxa19VVVpwdzA5R0U1NVJKa1RkTUJQeGpRejN0V2RsS3A1Z1hTNWJTbkUtRlBWaS1SUUladGs1MkRmalNQMzY3UWpvR3VFY25uNG9aWTVQUFZfaGxZdWpDZEFyNTRydXNoQVpWemF6QW1oam5jQlNwNGZqdllRUTIwMWdENEthOGtyRQ?oc=5",
-    "tema": "São Paulo",
-    "cobertura": 1
-   },
-   {
-    "titulo": "Prefeitura de SP ultrapassa marca histórica de 2.000 ônibus elétricos",
-    "fonte": "Estúdio Folha",
-    "quando": "2026-10-09T19:20:36-03:00",
-    "link": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxOa2RMdGU4QnhDaFJCb0pSVXBsWG16djk4eVc4dGN5NE5jSi01XzNwenc2c1k4Y3BoRHZmQUREVUZ3R0J2d09OTHJDNkVuMUxLa3lpR3lqZ2Z3cE1ITXBrQWIzVWNFOWtDRDBKX1E0a0R1UFNEaHFCMk55RWtNcEhrWjhqR2V2WTR3cktYMldSOGxCcGxhWDJ4cWJNaDROQmZYQlRDa2hoUVh3R1o5M1RwdmZYOFRLYU1waVAzNTFMTWw5VWNnSGZnRHJOZEtVeWpma1loYg?oc=5",
-    "tema": "São Paulo",
-    "cobertura": 1
-   },
-   {
-    "titulo": "Linha 1-Azul do Metrô de SP opera com velocidade reduzida após interferência na via; Linha 5-Lilás também registra falha e aciona Paese",
-    "fonte": "G1",
-    "quando": "2026-10-09T06:52:08-03:00",
-    "link": "https://news.google.com/rss/articles/CBMingJBVV95cUxNN081RGgzVi1xRTF5SDIwbkVrNHRBWkxWbEQtSGd1RDlJUGdXbUM3RWlEaEpYWi1Xdy1PVWZTbkdmaFl1WXhETmp6cUVEX0NWLXEtNkJyREI0RjE2SlM1bWl5V2t5Q1hjZ1JaT2hkbGFuUkdqdDBFOG5SMFlQOXp4Z0Zwc3I0NFRxUHoxOVFfM3hsTEhfeGQ3eVNrdkVRUXo5ZnZOYVpmVThkSXRfdUtiQnItM3NmRGUxaFBOX01pUnQtZjdnT2xETlhHQjU1U0xHNWItYUs1cmVXTjJxRUNWNGFYbUtpam5naEdUa3puR1pmWWxucHJRTElJX2QtbFVnQnRsYVJIUXlfSWhwSGkyZkRrekFYdWt5V25ubzN30gGsAkFVX3lxTE1Ba1NWdUhJeW4wQ3BQSmxWdjZwWGcwMG9BRkVQRHBuRTl6R0dCVEhwdHIzdXN2WGhqSjktQUF4WDRicnlwVG1xOVNHTjVoeVBpSkpwQTdBODVCT29nTWlhMXpMWV8wclpfTDVaWHZMbFBuRzY1aWFwNy1sc3hPbkVSUlVpQkJla3daWW1uRHdqeDkySDlhQXJFa3lTM2FGTk0xVTNvdDY1V2hEZnRLdHRaZHBjZktrTXJMRDlKTkdLVWdHTFFBeUlscDc4di1BMld1bjR1R3FKb2xjTjhodzY3cEYtWFVodnppWTJxb2J2RHpoaXMzbUNjdTNDWFlRczhZLWwwN1NlaGdtTzJUakNSdTRhUXdmOFd6TlBtSU5BaFE0OTZxSzBnVUloOQ?oc=5",
-    "tema": "São Paulo",
-    "cobertura": 1
-   },
-   {
-    "titulo": "Cidade de SP entra em estado de atenção para alagamentos em todas as regiões nesta sexta-feira",
-    "fonte": "G1",
-    "quando": "2026-10-09T17:58:04-03:00",
-    "link": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxQMnIxcnRjeWRRQUxLVkpCS1VvN3Y1M3ZiOGdTSDlOT3NrYVVERmtDWGdLYkRNTzV5Q1BGck9PcDRzUFNPN0N5TDFYNW5PY3VKUFJ5ZUh6ZXU5Y1Nsb0diUWswcGNXenhLX2s1cnN4ZFJ5YXFKemZPWWZTeG1pMTFpZkNzcFlHcXlycnhSWmxMc0JGR0JmTkhhVmdvY0thZlJtRHVfTDczTlFKYUlmbUE1MlpuU0ZPdXJfSkVzZlV4VnR6LWJDZFU1STBkdlpMa0ZTOERMbjF4N1NxZDNWY253ZUxMZkNCdTZBeElmak1QU1gwRUQzbXhV0gH3AUFVX3lxTFAycjFydGN5ZFFBTEtWSkJLVW83djUzdmI4Z1NIOU5Pc2thVURGa0NYZ0tiRE1PNXlDUEZyT09wNHNQU083Q3lMMVg1bk9jdUpQUnllSHpldTljU2xvR2JRazBwY1d6eEtfazVyc3hkUnlhcUp6Zk9ZZlN4bWkxMWlmQ3NwWUdxeXJyeFJabExzQkZHQmZOSGFWZ29jS2FmUm1EdV9MNzNOUUphSWZtQTUyWm5TRk91cl9KRXNmVXhWdHotYkNkVTVJMGR2WkxrRlM4RExuMXg3U3FkM1ZjbndlTExmQ0J1NkF4SWZqTVBTWDBFRDNteFU?oc=5",
-    "tema": "São Paulo",
-    "cobertura": 2
-   },
-   {
-    "titulo": "São Paulo suspende rodízio de veículos no feriado de 12 de outubro",
-    "fonte": "UOL Notícias",
-    "quando": "2026-10-09T14:52:31-03:00",
-    "link": "https://news.google.com/rss/articles/CBMiygFBVV95cUxPRlNoM3laamk3bnZHSERUWEhxWk5Idkc3cy1iay16RzlkOC1IWnhuYkQ4Tm9GdjlFaG9ESEVwWTJpZXFiN1lBdlBCWWlnbzlLZ1FJbms5UzE3Z3ZGT3I1TlJqRGVNb0hRMEZ1LW94b1hSZ1g1eXRXaE5YR3RyNHBJZ0xQcVV6SFhkSnhqdmdTNmZiNF9uQ0JqaWJrOXVHZFFRbk0zWjNlaXdFX0NqeTBzamRHOGh3SjFvdHRNYjZTTkNnb21HUEJlVWNB?oc=5",
-    "tema": "São Paulo",
-    "cobertura": 2
-   }
-  ],
+  "Brasil": [],
+  "Mundo": [],
+  "Economia": [],
+  "São Paulo": [],
   "IA e tech": [
    {
     "titulo": "YouTube Music testa design mais moderno com capas gigantes em álbuns e playlists",
@@ -261,142 +48,11 @@
     "link": "https://tecnoblog.net/noticias/apple-corta-pedidos-do-iphone-18-pro-devido-a-baixa-demanda/",
     "tema": "IA e tech",
     "cobertura": 1
-   },
-   {
-    "titulo": "OpenAI nega demissão por alertas de segurança e cita vazamento",
-    "fonte": "Estadão",
-    "quando": "2026-10-09T20:01:22-03:00",
-    "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPNmpaSTFhTUlqX0E4NFJSN2U0cmdrR1JlRHRmOXJtR1RJSk9LSHh1dWdUOGJ1MXFtMXVwQll1Q29sbjdrWldlTUJ4NVlGZWxnNmE5dkpNakJ6NTdmejBBaVA0MHJkc1UtaW1ROEhvV2tNc29mLXExR0J0MHJpV0ZKRDdvOW9EcTNLNnlKUFdwZDloeWowSmdaSEJHdkdMdWhzaDZoQWM3T3dmcjg?oc=5",
-    "tema": "IA e tech",
-    "cobertura": 2
    }
   ],
-  "Ciência": [
-   {
-    "titulo": "Selfie postada no Instagram revelou espécie amazônica inédita para a ciência",
-    "fonte": "Globo",
-    "quando": "2026-10-09T13:27:07-03:00",
-    "link": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxOaVl3WEZUejFvMEdFQV9YdlRMX2Z1dkpndExIZVg1V2tJVV9mRXBHamNvT3RBb2YxSzhDX1RvUjh1TGRwNXVKZmNUUVg5UDJ0T3M3bXBhdW1sc2Y4YXpNZXdNM2xHMEFuZ2lkdjFBVVdxb3VPWElBYUtnTG5jYjBIeDVUWENyUXNBeUZvTUVHYTB2UEZNS3ZPd0FyMjAweGp6WHA3RGNZQ0Jway13VThwQ0hYemFrT0k1YjJ1NHp5MXBsV0ZUN3RiMmx6LUJNSzNJLXh0a3FR0gHkAUFVX3lxTE5FTFlOaUtlR0drSHRDbjlaV1JvMEVENTFqVjRkdUU3ajZmM1NZN09tQXB3RTNDdnhzbVEzaDlEQ1pBOG9VQjFBLW5zWV9zUWZocWJVeVVYVDRyLWdvQ25YdEVsRHBJRm9OVC1JQUpHZjNGZ0hsVmNmb1ZwRk5xRk1xZXNkWVk4UC1xRTZuN2N1dXQ0ZjA0aU1hdmUzdkxnUGxpbXZCemphRjQyeWlYMVZ0dEM3TjkzdWZQRzZrNmdmQ2xwLVkwVzBDTDYzUlJLRzdiN3B4dWNyLUt0RjEzQ3pfWUlSVw?oc=5",
-    "tema": "Ciência",
-    "cobertura": 1
-   },
-   {
-    "titulo": "15, 20 ou 90 minutos? Neurocientista dá 4 dicas para cochilar do jeito certo sem atrapalhar o sono depois",
-    "fonte": "Globo",
-    "quando": "2026-10-09T09:55:55-03:00",
-    "link": "https://news.google.com/rss/articles/CBMi7AFBVV95cUxPcHpHTWJwYTkzSHVWRnBDbHVwSUZwWTljVUhPQ09kUnFZZ1lSUDhvaGdDbFktb0hLN1oyQTMyd1V1X25jT2JOYXJ6Z3ZVeUdtZzk3SHFFVnBYdXlPWDdXT2hxX1RlRnRpT2tFUjNhMUJlNkpPelJmekpPaW9CdGpFRmRvb0hJT1ZOY2FPeTg1M1BzVHhzUW5RSkJTdjdETktDMFpmM0xnWjZkeF85YmRLQkVDX0lGWHZDbUZPbExscTAzNzRxWE40a2l3SXBwOWFRQng5RXl0LUM0MDhpTThIX3piZTdkUUhYN3FyLdIB-wFBVV95cUxNOWlHaHpnQTFfak9XSDM2T29SbmVaNUVOMFRDMmNIS3FGanNqQzM0bGsxUXAtUG43YnRhS2d0MUk0Rm9kVlhwc3JwU3REeVp6OVdzMThMZGVISVk4RGNvMEUxaVJFdXN5a3cwNFdvc3RWMmV0a2JuRDBBdmJnRDRRcHUyWmVfdmp1NldxLXJuMHdfTTQ4b1p3ZnJOaWEySTRNQjkxd2MxWW9JU0FSbWk3cXY0U0s4Uk1yQ216ajlUa01CV2UzenBRcDVsSHlrODBvOEFmcHVqb1l2Nmh3Q3dDaEkzaWVZd0lJbTd2NXpaY29tU3RaS0UwbUJvRQ?oc=5",
-    "tema": "Ciência",
-    "cobertura": 1
-   },
-   {
-    "titulo": "Quase todo mundo vira naturalmente para a esquerda ao caminhar, e ainda não fazemos ideia do porquê",
-    "fonte": "G1",
-    "quando": "2026-10-09T04:00:00-03:00",
-    "link": "https://news.google.com/rss/articles/CBMi5wFBVV95cUxPcUFlbGV4cVZOZUM0bU1LVEY0U21BclVGc0U5bTNTX3ZFSFc3OVo3QVE3bUQzWEhEYk5vanZTbGk2NkFVNVRLTWs2RFdvYnoxZzltMVpuYWltd1FlUkZwRGRiQ282Z2FKRTBWMWhNM1B1RkcxSVJvdTA0LTNKSHduUlktOWNpWTdOVHVlRk8tX01jNnl1c2lZM0ZLb3pmSXA1QVRzTGFJMjgzWjA3MmNaYWdscnV1bXBYVVh4OTlzUlhDQ2t3VnlIZ3hCbGZWaG91Y1VxNFhBTlhKelFncUpRQkRWVU43bTA?oc=5",
-    "tema": "Ciência",
-    "cobertura": 1
-   },
-   {
-    "titulo": "Marte na Terra? Lago na Turquia tem águas 'de outro mundo'",
-    "fonte": "G1",
-    "quando": "2026-10-09T04:00:00-03:00",
-    "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQN0JFcVJDd2RFTmdpZWtjS3QtRzBRQ1R6M2lVU0VlTDZzTnBvdmxMdXYwYnVDbWtjR3B5TG85QXlwLS1jU25hSzNZRS1BWXF5T3FwbnJxQlhpWE9HVHdyRjZoaG52VkdjQ1dnZHUtanZIUDByV19tczdGRDl6bld4MHNlX1J4NDY5Yjlqa2pPVUZ4VE4xX1pRazYweVVGY3ZESVE3X0JrRFBfS2ltYnfSAbwBQVVfeXFMTVpQcGZVd28yeGQ2TUNWNncybEdRNU9xQk5HVGh6WHNtSmRwUTFaQkZSMWVrTnI2SzJmR2NHSnRKUXhKbjVZanJoNF9ldXBIRHBsMlAtbW91QnlCQnFXRHM3d1V1N0JrV1M4TGxDcjNJWVlFN1M1NHVESWVubFJJaFVJdmUyd1FKZUtWTHpCbHdYckhsdTR2cEN3cGp5QXhNR1M2dkZma1BJT21xVmRJNFZsdEM5S01lQ1pjQ1M?oc=5",
-    "tema": "Ciência",
-    "cobertura": 1
-   },
-   {
-    "titulo": "Nuvem gigante de 1800 km aparece e desaparece diariamente na superfície de Marte",
-    "fonte": "CNN Brasil",
-    "quando": "2026-10-09T08:25:10-03:00",
-    "link": "https://news.google.com/rss/articles/CBMiugFBVV95cUxOZGxYbUFQS2VmMy1SR3FvRk1GbHdWTzl4VkJPN1ozUjVNU0lsakx1T1pmMFlCOF91MHRRRGx0NmdOOUdkNWdiX2JENHNuTEZZWDlBdjRrbUhYVGpockdnaTVjWkthYVpJWW0wU091SGRLZHg3MnF4N3l1Rmoxd2FuMHIyWE5LQUhob3VwdFJEdHNSNHl2THA5R0ZXa2lsUGVTOXZhZ1puYmtEUFVPQzliR2pWd1hFdzFqb0E?oc=5",
-    "tema": "Ciência",
-    "cobertura": 1
-   }
-  ],
-  "Games": [
-   {
-    "titulo": "Emulação do PS5 dá grande salto ao traduzir 100% das instruções de shaders da GPU",
-    "fonte": "Adrenaline",
-    "quando": "2026-10-09T09:04:00-03:00",
-    "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPTlc1RjFYYjVsbFdCYmMtT2xwX1NHbVBRVkd2YVBlR3pZemlzaUE1MENWSkM1NmgxZy04RndfbXRjaHVwQ2ZxX1Q5VFBkMVk5SlkyeTI2VVRmMmhfSnNHeGxVUHVFRVhKVDlmSXU4NEhzd2pBRGRaNHpsMDRPbTBkb2hNRDd1RFJucjhJTmRIbjV0ZTNaVUFjRUVkY3NWYTA2RU5mZUxTeUhVcXhfcFpFeDBHbnRTZ0c2?oc=5",
-    "tema": "Games",
-    "cobertura": 1
-   },
-   {
-    "titulo": "Nintendo comenta primeiro jogo de The Legend of Zelda com dublagem em PT-BR",
-    "fonte": "Omelete",
-    "quando": "2026-10-09T19:13:00-03:00",
-    "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPLW83emxmSzViaVNRRWItSUVoT2ZTNTZVd3RIWkdETDFuM1NaMWJ4T19kTHFEWEZKb1JOMlJIanJpVThxN2RuSHZyVGlNWGZnRzd5MUNnUHJkNEZJR00xaW5RZGpRV3V2LXF1UWZhamEzTlRmRHdSdm9XWmppYlphNTNaN1FZd3pBMkp5Z0dR?oc=5",
-    "tema": "Games",
-    "cobertura": 1
-   },
-   {
-    "titulo": "GTA 6 no Switch 2? Nintendo quebra o silêncio sobre o assunto",
-    "fonte": "einerd.com",
-    "quando": "2026-10-09T21:30:00-03:00",
-    "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBVS0V2S1ZyZ29sRjYwN0U5UjdEZjA1YXFnRV9WYnBuakxkbEM4R0M0WDM1SmtDY1B0LVJCM1VnR2pzbWRYY0lpOGZHUkRXajg4bkNRbkRpV3JhOVYtMFBoa2V6c1U0UQ?oc=5",
-    "tema": "Games",
-    "cobertura": 1
-   },
-   {
-    "titulo": "PS5 agora consegue emular jogos de PS2 com até 120 FPS",
-    "fonte": "TudoCelular.com",
-    "quando": "2026-10-09T10:55:25-03:00",
-    "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxNclRDVDV5eFU0WVpfOGstdTNFRGNldWRfYjRRTV9PdWNqV0gyUGs5UFE2RW9IWXlEU3VxQ2lUTVhqeG0tRUdndEV5MmU2eUY1ZGpRREh5TXZEdGZDRzMwbk4ya1RCc3h1MnhXeEE4WmxCYWFDWVdIRjVvcXdVWHg3dG1mRWpCbGowZl9BMmxIVHRoNW5XcGc?oc=5",
-    "tema": "Games",
-    "cobertura": 1
-   },
-   {
-    "titulo": "Crunchyroll ganha espaço exclusivo na tela do PS5",
-    "fonte": "Fast Company Brasil",
-    "quando": "2026-10-09T16:03:10-03:00",
-    "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxNWTdOLUhEUUFrMktCQUthcjFseXdVenRaUW9CUGIwLVhoVjZ0QUVEd3d6QkcxT1kySzBKdlhOdlN2cGN6b19GS2xuZkVxekFfcW9BQXBZUXBmQk54UzlMRG9zU2RsUnZMQU9tU2FZRDgzRWxUU1dVYXFtYlVZcVhJUU5KeXhPY0E?oc=5",
-    "tema": "Games",
-    "cobertura": 1
-   }
-  ],
-  "Cultura": [
-   {
-    "titulo": "8 livros de ficção que refletem sobre desastres ambientais",
-    "fonte": "Nexo Jornal",
-    "quando": "2026-10-09T18:22:07-03:00",
-    "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQaGdZcnhuUHpDRkdYSFpqOXcyNk9WdW4wd0oybl9ObWJITE5CYlNmcEJaQnJEZjRpdnB3Q1UweFBqXzdvcXRiQlNtbnpSam1EWElrX2lNejlGRmxyOURoMDlaZmJ3WGNrdGpzNDlLZlJTS082cFhTcV9EVTAxMDR0Z01sUGZTQkdvXzgtRE1FMnFDWUFRa0tWUlZMTXRBZnM?oc=5",
-    "tema": "Cultura",
-    "cobertura": 1
-   },
-   {
-    "titulo": "Quantos episódios tem Guerra? Veja quando estreia o próximo na HBO Max",
-    "fonte": "UOL",
-    "quando": "2026-10-09T17:00:00-03:00",
-    "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNRTBNT1ozQ0JodW5oNHV6ZW5aMDRMNDdtcFUwVGtaczdNa0xMODhoNW1SNi1NNHA3ZTlLRzZDUmtUZm5qQW1oaDFWRnQyS1ZwaHVWQ0tXcmJ4Yl8xenJNT2pWZFJWLWZzbUNJZ2RqTmpCNFVwM2dBQ2tTeDN3Z0ROSl9pYl9RMks2UTdUdHF0TXU4N2xFaS1FVzM0Vk5UUDI4Qm1wNVdudmJ6eldHeF9TR0tDMA?oc=5",
-    "tema": "Cultura",
-    "cobertura": 2
-   },
-   {
-    "titulo": "Bienal Literária de Taubaté terá palestra com vencedor do Prêmio Jabuti e programação gratuita",
-    "fonte": "THMais",
-    "quando": "2026-10-09T15:00:00-03:00",
-    "link": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxNSFRZZlNLYnZiaEM5RzVmWDJEZzJjRVhvUklrYW5OT2pqczJ0cnpBeERpcXkxNHpnTmF1TnQ1eVcydEM1OWJjdmFkMmd3QUEtRXJaLTNhSlhWX0E1SkVJTk5Mam1mNmJ5b0NXODBNX0hwZjhGd1Znc0dESjRQOXhYWi1zVzEzNWhjY1ZDT2RIbUhlZjBiQVc2UE16ZlpsRXpRTEZMTDMxY1NhZF9oRHdPalA1cXhQajRNU3pJSFpEa1VLc2MwSUhvODhqUG1EUWRXRU91WVRSV3JMcDg?oc=5",
-    "tema": "Cultura",
-    "cobertura": 2
-   },
-   {
-    "titulo": "'A Empregada', com Sydney Sweeney e Amanda Seyfried, estreia na HBO Max",
-    "fonte": "Rede Atlântida",
-    "quando": "2026-10-09T19:17:37-03:00",
-    "link": "https://news.google.com/rss/articles/CBMi9AFBVV95cUxNdWJCT0VRQTRXby1XUjRycEpJRjdUSkpncHo0S1lZMjF3VUNhY3c3WFItaUgzSEYxa1JOcFlQYkpYcVBPaVpIMjNxS2Zvcm13dkNyWEctTFNkb0hLbnQzV1VkZ0hYTUFXV0ZsbkYxU1gxc2ZDODJsQ3JVSk9rMGhkemxFaEVtcDU1bnpyYmw5NmtrSzVXYTdha0U2RVFqdzJsTEdrcU1hT2RQeXRKOUlBeWtMcFhsRlpvMUgwU01kTmxybl9ScnFIMFl3QndERWJQODlyemNxczNkaDF4TkVyck1DTURWWlp4UjFCRU1WOXhXeVN2?oc=5",
-    "tema": "Cultura",
-    "cobertura": 1
-   },
-   {
-    "titulo": "É oficial: a sucessora de 'Game of Thrones' estreia uma nova história antes de chegar ao Prime Video",
-    "fonte": "Purepeople",
-    "quando": "2026-10-09T19:46:00-03:00",
-    "link": "https://news.google.com/rss/articles/CBMi_AFBVV95cUxOVHM4Tl9FekxWdlFHZ2FPUnoyTDZpNXFfY2lwTlVia0VHVlk3NHVwT3JaX3pCS01OYkxGYkxaV3NtTWxzSHVLSDRMdnBmYmdabHBCODhhQjE5QXBmQkVJS1lsUWJpcXRRNlZHSGxZa2VEVkt1VE9DR0lyQ1E2TDYtVW9MeHdpWjZKQ1BfZjBmWmVLcFpaQ0l3aUFneUVKcGxyVUpDcnNHYm5EeXdtWS1oSVNVRW9GZ0xYOTJlVnRldmFvcmFRZUNZQmYyUzE5N2xDcnBOVzFBRzdYWUZ1Mld5YWMxNlRFdDRmeXgtUUpHY0FWYWtQTUdnNXRLNXfSAfwBQVVfeXFMTlRzOE5fRXpMVnZRR2dhT1J6Mkw2aTVxX2NpcE5VYmtFR1ZZNzR1cE9yWl96QktNTmJMRmJMWldzbU1sc0h1S0g0THZwZmJnWmxwQjg4YUIxOUFwZkJFSUtZbFFiaXF0UTZWR0hsWWtlRFZLdVRPQ0dJckNRNkw2LVVvTHh3aVo2SkNQX2YwZlplS3BaWkNJd2lBZ3lFSnBsclVKQ3JzR2JuRHl3bVktaElTVUVvRmdMWDkyZVZ0ZXZhb3JhUWVDWUJmMlMxOTdsQ3JwTlcxQUc3WFlGdTJXeWFjMTZURXQ0Znl4LVFKR2NBVmFrUE1HZzV0SzV3?oc=5",
-    "tema": "Cultura",
-    "cobertura": 1
-   }
-  ]
+  "Ciência": [],
+  "Games": [],
+  "Cultura": []
  },
  "nasa": {
   "titulo": "Cosmic House of Mirrors",
@@ -430,7 +86,7 @@
  "clima": {
   "latitude": -23.514938,
   "longitude": -46.610504,
-  "generationtime_ms": 0.3483295440673828,
+  "generationtime_ms": 658.2305431365967,
   "utc_offset_seconds": -10800,
   "timezone": "America/Sao_Paulo",
   "timezone_abbreviation": "GMT-3",
@@ -444,10 +100,10 @@
    "precipitation": "mm"
   },
   "current": {
-   "time": "2026-10-09T22:15",
+   "time": "2026-10-09T22:30",
    "interval": 900,
-   "temperature_2m": 20.5,
-   "apparent_temperature": 24.3,
+   "temperature_2m": 20.4,
+   "apparent_temperature": 24.2,
    "weather_code": 3,
    "precipitation": 0.0
   },
@@ -1387,14 +1043,10 @@
  },
  "radar": {
   "version": "2.0",
-  "generated": 1791595534,
+  "generated": 1791595825,
   "host": "https://tilecache.rainviewer.com",
   "radar": {
    "past": [
-    {
-     "time": 1791588000,
-     "path": "/v2/radar/8c6f2ecd0f94"
-    },
     {
      "time": 1791588600,
      "path": "/v2/radar/9a1bfc8c75f7"
@@ -1442,6 +1094,10 @@
     {
      "time": 1791595200,
      "path": "/v2/radar/9e8e3bcc1f00"
+    },
+    {
+     "time": 1791595800,
+     "path": "/v2/radar/d924d8f39c4f"
     }
    ],
    "nowcast": []
@@ -1453,7 +1109,7 @@
  "ar": {
   "latitude": -23.599998,
   "longitude": -46.59999,
-  "generationtime_ms": 0.5232095718383789,
+  "generationtime_ms": 0.33402442932128906,
   "utc_offset_seconds": -10800,
   "timezone": "America/Sao_Paulo",
   "timezone_abbreviation": "GMT-3",
