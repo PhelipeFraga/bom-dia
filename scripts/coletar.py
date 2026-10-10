@@ -97,8 +97,11 @@ def palavras_chave(titulo):
 
 
 def parecida(chaves, vistas):
-    """Mesma notícia por outro veículo: mais da metade das palavras em comum."""
-    return any(len(chaves & v) / max(1, min(len(chaves), len(v))) > 0.5 for v in vistas)
+    """Mesma notícia por outro veículo (mais da metade das palavras em comum): devolve a já vista."""
+    for v, item in vistas:
+        if len(chaves & v) / max(1, min(len(chaves), len(v))) > 0.5:
+            return item
+    return None
 
 
 def ler_feed(url):
@@ -143,21 +146,48 @@ def noticias():
                 or (tema not in SEM_FILTRO_TRAGEDIAS and BLOQUEIO_TRAGEDIAS.search(n["titulo"]))
                 or (tema in BLOQUEIO_TEMA and BLOQUEIO_TEMA[tema].search(n["titulo"]))
                 or FONTES_RUINS.match(n["fonte"])
-                or por_fonte.get(n["fonte"], 0) >= MAX_POR_FONTE
                 or len(chaves) < 3
-                or parecida(chaves, vistas)
             ):
                 cortadas += 1
                 continue
-            vistas.append(chaves)
+            igual = parecida(chaves, vistas)
+            if igual:
+                # Outro veículo dando a mesma notícia: não repete, mas conta como cobertura
+                if n["fonte"] not in igual["veiculos"]:
+                    igual["veiculos"].append(n["fonte"])
+                continue
+            if len(lista) == POR_TEMA or por_fonte.get(n["fonte"], 0) >= MAX_POR_FONTE:
+                vistas.append((chaves, {"veiculos": [n["fonte"]]}))  # só para contar cobertura
+                continue
+            n["veiculos"] = [n["fonte"]]
+            vistas.append((chaves, n))
             por_fonte[n["fonte"]] = por_fonte.get(n["fonte"], 0) + 1
             n["quando"] = n["quando"].isoformat() if n["quando"] else None
+            n["tema"] = tema
             lista.append(n)
-            if len(lista) == POR_TEMA:
-                break
         print(f"{tema}: {len(lista)} entraram, {cortadas} cortadas pelo crivo")
         saida[tema] = lista
+    for lista in saida.values():
+        for n in lista:
+            n["cobertura"] = len(n.pop("veiculos"))
     return saida
+
+
+ORDEM_DESTAQUES = ["Brasil", "Mundo", "Economia", "IA e tech", "Ciência", "São Paulo", "Games", "Cultura"]
+
+
+def destaques(noticias_por_tema, quantos=5):
+    """O mais importante do dia: a principal de cada tema (o Google já ordena por relevância),
+    na ordem de ORDEM_DESTAQUES."""
+    return [noticias_por_tema[t][0] for t in ORDEM_DESTAQUES if noticias_por_tema.get(t)][:quantos]
+
+
+AVISO_SP = re.compile(r"metr[oô]|\blinha \d|CPTM|greve|alagament|falta de (energia|luz|[aá]gua)|"
+                      r"\bEnel\b|interdi[cç]|congestionament|rod[ií]zio", re.I)
+
+
+def avisos_sp(noticias_por_tema):
+    return [n for n in noticias_por_tema.get("São Paulo", []) if AVISO_SP.search(n["titulo"])][:2]
 
 
 def nasa():
@@ -190,6 +220,22 @@ def neste_dia(hoje):
     return saida
 
 
+CLIMA_URL = ("https://api.open-meteo.com/v1/forecast?latitude=-23.55&longitude=-46.63"
+             "&current=temperature_2m,weather_code,precipitation"
+             "&hourly=temperature_2m,precipitation_probability,weather_code"
+             "&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max"
+             "&timezone=America%2FSao_Paulo&forecast_days=7")
+
+
+def json_de(url, nome):
+    """Cópia de reserva do clima e do radar: a página busca ao vivo e só usa esta se falhar."""
+    try:
+        return json.loads(baixar(url))
+    except Exception as e:
+        print(f"[aviso] {nome}: {e}")
+        return None
+
+
 def palavra(hoje):
     palavras = json.loads((RAIZ / "scripts" / "palavras.json").read_text(encoding="utf-8"))
     return palavras[hoje.timetuple().tm_yday % len(palavras)]
@@ -197,12 +243,17 @@ def palavra(hoje):
 
 def main():
     agora = datetime.now(SP)
+    por_tema = noticias()
     dados = {
         "gerado_em": agora.isoformat(timespec="minutes"),
-        "noticias": noticias(),
+        "destaques": destaques(por_tema),
+        "avisos_sp": avisos_sp(por_tema),
+        "noticias": por_tema,
         "nasa": nasa(),
         "neste_dia": neste_dia(agora),
         "palavra": palavra(agora),
+        "clima": json_de(CLIMA_URL, "clima"),
+        "radar": json_de("https://api.rainviewer.com/public/weather-maps.json", "radar"),
     }
     (RAIZ / "data.json").write_text(json.dumps(dados, ensure_ascii=False, indent=1), encoding="utf-8")
     total = sum(len(v) for v in dados["noticias"].values())
