@@ -66,6 +66,7 @@ body{background:var(--bg);color:var(--txt);font-family:Manrope,system-ui,sans-se
 .tabs{display:flex;gap:8px;overflow-x:auto;margin-bottom:6px;scrollbar-width:none}
 .tab{font-size:13px;font-weight:500;padding:7px 14px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--dim);white-space:nowrap;cursor:pointer}
 .tab.on{background:var(--txt);color:var(--bg)}
+a.nw,a.card-link{display:block;color:inherit;text-decoration:none}
 .nw{padding:12px 0;border-top:1px solid var(--line);font-size:15px;line-height:1.4}
 .nw small{display:block;font-size:12px;color:var(--dim);margin-top:3px}
 .nasa{height:190px;margin:-18px -18px 14px;background:radial-gradient(ellipse at 62% 38%,rgba(255,150,90,.35),transparent 45%),radial-gradient(ellipse at 38% 62%,rgba(90,140,255,.35),transparent 50%),#03040a;position:relative}
@@ -117,34 +118,31 @@ body{background:var(--bg);color:var(--txt);font-family:Manrope,system-ui,sans-se
   </div>
 
   <div class="sec">
-    <div class="h">Notícias <b>06:58</b></div>
+    <div class="h">Notícias <b id="newsat"></b></div>
     <div class="tabs" id="tabs"></div>
-    <div id="news"></div>
+    <div id="news"><p class="nw" style="border:0;color:var(--dim)">Carregando…</p></div>
   </div>
 
-  <div class="sec">
+  <a class="sec card-link" id="nasabox" target="_blank" rel="noopener" style="display:none">
     <div class="nasa" id="nasa"></div>
     <div class="h">Foto do dia · NASA</div>
-    <p style="font-size:16px">Nebulosa da Águia vista pelo James Webb</p>
+    <p style="font-size:16px;font-weight:500" id="nasat"></p>
+    <p style="font-size:13px;color:var(--dim);margin-top:6px;line-height:1.5" id="nasad"></p>
+  </a>
+
+  <div class="sec" id="ndbox" style="display:none">
+    <div class="h">Neste dia · <span id="ndday" style="letter-spacing:0;text-transform:none"></span></div>
+    <div id="nd"></div>
   </div>
 
-  <div class="sec">
-    <div class="h">Neste dia · 9 de outubro</div>
-    <p style="font-size:16px;line-height:1.5">Um fato marcante desta data, em duas linhas, com link para ler mais.</p>
-  </div>
-
-  <div class="sec">
+  <div class="sec" id="wbox" style="display:none">
     <div class="h">Palavra do dia</div>
-    <div class="word">breakthrough</div>
-    <p style="color:var(--dim);font-size:14px;margin-top:2px">/ˈbreɪk.θruː/ · avanço</p>
-    <p style="font-size:15px;margin-top:10px;font-style:italic">“The team made a breakthrough last night.”</p>
+    <div class="word" id="wen"></div>
+    <p style="color:var(--dim);font-size:14px;margin-top:2px" id="wpt"></p>
+    <p style="font-size:15px;margin-top:10px;font-style:italic" id="wex"></p>
   </div>
 
-  <div class="grid">
-    <div class="sec"><div class="h">Jogos</div><div class="big">3</div><p style="font-size:13px;color:var(--dim)">PS Plus de outubro · +2 lançamentos</p></div>
-    <div class="sec"><div class="h">Estreias</div><div class="big">6</div><p style="font-size:13px;color:var(--dim)">4 filmes · 2 séries</p></div>
-  </div>
-  <p class="foot">Clima e radar reais · demais blocos com dados de exemplo</p>
+  <p class="foot" id="foot">Clima e radar ao vivo</p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -265,11 +263,27 @@ function show(i){layers[fi]&&layers[fi].setOpacity(0);fi=i;layers[fi].setOpacity
   document.getElementById('prog').style.width=((fi+1)/frames.length*100)+'%'}
 document.getElementById("pp").onclick=e=>{playing=!playing;e.target.textContent=playing?'❚❚':'▶'};}catch(e){document.getElementById("map").innerHTML="<p style=\"padding:20px;color:#888\">Mapa indisponível neste visualizador</p>"}
 
-const N={Brasil:["Manchete principal do Brasil hoje","Segunda manchete do dia","Terceira manchete do dia"],Mundo:["Manchete internacional 1","Manchete internacional 2","Manchete internacional 3"],Ciência:["Descoberta científica do dia","Notícia de ciência 2","Notícia de ciência 3"],Tecnologia:["Novidade em IA","Notícia de tecnologia 2","Notícia de tecnologia 3"],Games:["Notícia de games 1","Notícia de games 2","Notícia de games 3"]};
-const F=["g1 · 06:12","Folha · 05:40","BBC Brasil · 05:02"],tabs=document.getElementById('tabs'),news=document.getElementById('news');
-function showN(k){[...tabs.children].forEach(t=>t.classList.toggle('on',t.textContent===k));news.innerHTML=N[k].map((h,i)=>`<div class="nw">${h}<small>${F[i]}</small></div>`).join('')}
-Object.keys(N).forEach(k=>{const t=document.createElement('span');t.className='tab';t.textContent=k;t.onclick=()=>showN(k);tabs.appendChild(t)});showN('Brasil');
-const nasa=document.getElementById('nasa');for(let i=0;i<70;i++){const s=document.createElement('i');s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.opacity=Math.random().toFixed(2);nasa.appendChild(s)}
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const $=id=>document.getElementById(id);
+function ago(iso){if(!iso)return'';const m=Math.round((Date.now()-new Date(iso))/6e4);
+  return m<60?`há ${Math.max(m,1)} min`:m<1440?`há ${Math.round(m/60)} h`:new Date(iso).toLocaleDateString('pt-BR',{day:'numeric',month:'short'})}
+function render(d){
+  const N=d.noticias||{},tabs=$('tabs'),news=$('news');tabs.innerHTML='';
+  const showN=k=>{[...tabs.children].forEach(t=>t.classList.toggle('on',t.textContent===k));
+    news.innerHTML=(N[k]||[]).map(n=>`<a class="nw" href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.titulo)}<small>${esc(n.fonte)} · ${ago(n.quando)}</small></a>`).join('')||'<p class="nw" style="border:0;color:var(--dim)">Sem notícias agora</p>'};
+  Object.keys(N).filter(k=>N[k].length).forEach(k=>{const t=document.createElement('span');t.className='tab';t.textContent=k;t.onclick=()=>showN(k);tabs.appendChild(t)});
+  if(tabs.firstChild)showN(tabs.firstChild.textContent);
+  $('newsat').textContent=d.gerado_em?'robô '+new Date(d.gerado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'';
+  if(d.nasa){$('nasabox').style.display='block';$('nasabox').href=d.nasa.link;
+    $('nasa').style.background=`#03040a url("${d.nasa.imagem}") center/cover`;$('nasat').textContent=d.nasa.titulo;$('nasad').textContent=d.nasa.texto}
+  if(d.neste_dia&&d.neste_dia.length){$('ndbox').style.display='block';
+    $('ndday').textContent=new Date().toLocaleDateString('pt-BR',{day:'numeric',month:'long'});
+    $('nd').innerHTML=d.neste_dia.map(e=>`<a class="nw" href="${esc(e.link||'#')}" target="_blank" rel="noopener"><span style="color:var(--warm);font-weight:600">${esc(e.ano)}</span> · ${esc(e.texto)}</a>`).join('')}
+  if(d.palavra){$('wbox').style.display='block';$('wen').textContent=d.palavra.en;$('wpt').textContent=`${d.palavra.fon} · ${d.palavra.pt}`;$('wex').textContent=`“${d.palavra.ex}”`}
+}
+fetch('https://raw.githubusercontent.com/PhelipeFraga/bom-dia/main/data.json?t='+Date.now())
+  .then(r=>{if(!r.ok)throw 0;return r.json()}).catch(()=>fetch('data.json').then(r=>r.json()))
+  .then(render).catch(()=>{$('news').innerHTML='<p class="nw" style="border:0;color:var(--dim)">O robô ainda não rodou</p>'});
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
 </body>
