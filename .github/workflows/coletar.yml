@@ -2,7 +2,7 @@ name: Coletar dados do Bom dia
 
 on:
   schedule:
-    - cron: "50 * * * *"   # de hora em hora, aos 50 min (inclui 6h50 em SP)
+    - cron: "20,50 * * * *"   # de 30 em 30 min (aos 20 e aos 50), por causa da situação do metrô
   workflow_dispatch:         # botão "Run workflow" para rodar na hora
   push:
     branches: [main]

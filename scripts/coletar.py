@@ -3,6 +3,7 @@ e grava tudo em data.json, que a página lê. Roda no GitHub Actions às 6h50.
 Só usa a biblioteca padrão do Python (nada para instalar)."""
 
 import gzip
+import html as html_mod
 import json
 import time
 import re
@@ -380,6 +381,70 @@ def json_de(url, nome):
         return None
 
 
+# ---------------- Metrô e trens ----------------
+METRO_URL = "https://www.metro.sp.gov.br/wp-content/themes/metrosp/direto-metro.php"
+CPTM_URL = "https://api.cptm.sp.gov.br/AppCPTM/v1/Linhas/ObterStatus"
+CPTM = {10: ("Turquesa", "#008b8b"), 11: ("Coral", "#f04e23"), 12: ("Safira", "#083e89"), 13: ("Jade", "#00b352")}
+PROBLEMA = re.compile(r"falha|interromp|paralis|velocidade reduzida|lentid|atraso|pane|sem circula|suspens|"
+                      r"inoperan|problema|normaliza", re.I)
+
+
+def linhas_metro():
+    """Situação oficial das linhas do Metrô (1, 2, 3, 4, 5, 15 e 17), da página "Direto do Metrô"."""
+    pagina = baixar(METRO_URL).decode("utf-8", "ignore")
+    saida = []
+    for bloco in re.findall(r'<li class="linha list-group-item">(.*?)</li>', pagina, re.S):
+        num = re.search(r'class="linha-numero"[^>]*?background-color:\s*(#[0-9a-fA-F]{6})[^>]*>(\d+)<', bloco)
+        nome = re.search(r'class="linha-nome">([^<]+)<', bloco)
+        sit = re.search(r'class="linha-situacao"[^>]*>([^<]+)<', bloco)
+        quando = re.search(r"atualizado em ([0-9/]+ [0-9:]+)", bloco)
+        desc = re.search(r"class='description'>(.*?)</div>", html_mod.unescape(bloco), re.S)
+        if num and nome and sit:
+            saida.append({"numero": int(num.group(2)), "nome": nome.group(1).strip(), "cor": num.group(1),
+                          "situacao": sit.group(1).strip(), "detalhe": re.sub(r"<[^>]+>", " ", desc.group(1)).strip() if desc else "",
+                          "quando": quando.group(1) if quando else None, "fonte": "Metrô"})
+    return saida
+
+
+def linhas_cptm():
+    saida = []
+    for l in json.loads(baixar(CPTM_URL)):
+        nome, cor = CPTM.get(l["linhaId"], (str(l["linhaId"]), "#888888"))
+        saida.append({"numero": l["linhaId"], "nome": nome, "cor": cor, "situacao": l.get("status") or "",
+                      "detalhe": l.get("descricao") or "", "quando": l.get("dataGeracao"), "fonte": "CPTM"})
+    return saida
+
+
+def linha9_pelas_noticias():
+    """A ViaMobilidade não publica a situação num formato aberto: procura notícias de problema na
+    Linha 9-Esmeralda nas últimas 3 horas."""
+    url = GN.format("search?q=%22Linha+9%22+Esmeralda+when:1d&")
+    limite = datetime.now(SP) - timedelta(hours=3)
+    alerta = None
+    for n in ler_feed(url):
+        if n["quando"] and n["quando"] >= limite and PROBLEMA.search(n["titulo"]):
+            alerta = n
+            break
+    return {"numero": 9, "nome": "Esmeralda", "cor": "#01a9a7", "fonte": "notícias",
+            "situacao": "Possível problema" if alerta and not re.search(r"normaliza|opera normalmente", alerta["titulo"], re.I)
+                        else "Sem alertas nas notícias",
+            "detalhe": alerta["titulo"] if alerta else "", "link": alerta["link"] if alerta else None,
+            "quando": alerta["quando"].isoformat() if alerta else None}
+
+
+def linhas():
+    lista = []
+    for nome, func in (("Metrô", linhas_metro), ("CPTM", linhas_cptm), ("Linha 9", linha9_pelas_noticias)):
+        try:
+            r = func()
+            lista.extend(r if isinstance(r, list) else [r])
+        except Exception as e:
+            print(f"[aviso] linhas {nome}: {e}")
+    lista.sort(key=lambda l: l["numero"])
+    print("linhas: " + ", ".join(f'{l["numero"]}={l["situacao"]}' for l in lista))
+    return lista
+
+
 def palavra(hoje):
     palavras = json.loads((RAIZ / "scripts" / "palavras.json").read_text(encoding="utf-8"))
     return palavras[hoje.timetuple().tm_yday % len(palavras)]
@@ -416,6 +481,7 @@ def main():
         "radar": json_de("https://api.rainviewer.com/public/weather-maps.json", "radar"),
         "ar": json_de(AR_URL, "qualidade do ar"),
         "fotos_guardadas": fotos,
+        "linhas": linhas(),
     }
     (RAIZ / "data.json").write_text(json.dumps(dados, ensure_ascii=False, indent=1), encoding="utf-8")
     total = sum(len(v) for v in dados["noticias"].values())
