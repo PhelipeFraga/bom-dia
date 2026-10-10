@@ -73,7 +73,10 @@ a{color:inherit;text-decoration:none}
 .ic img,.ic svg{width:28px;height:28px}
 .cards{display:flex;gap:12px;padding:18px 22px 4px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
 .cards::-webkit-scrollbar{display:none}
-.card{flex:none;width:270px;border-radius:22px;padding:16px 18px;background:var(--card);scroll-snap-align:start;display:block}
+.card{flex:none;width:280px;border-radius:22px;background:var(--card);scroll-snap-align:start;display:block;overflow:hidden}
+.card .tx{padding:14px 18px 16px}
+.foto{display:block;width:100%;object-fit:cover;background:#1c1f27}
+.card .foto{height:150px}
 .card h3{font-family:Newsreader,Georgia,serif;font-weight:500;font-size:19px;line-height:1.24;margin:8px 0 2px}
 .sub{padding:22px 22px 0}
 
@@ -86,9 +89,15 @@ a{color:inherit;text-decoration:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:none;font-size:13px;font-weight:600;padding:8px 15px;border-radius:99px;background:var(--card2);color:var(--dim);cursor:pointer;border:0;font-family:inherit}
 .chip.on{background:var(--txt);color:var(--bg)}
-.lead{display:block;margin:16px 22px 6px;border-radius:24px;padding:20px;background:linear-gradient(160deg,#2a2440,#191c23 70%)}
+.lead{display:block;margin:16px 16px 6px;border-radius:24px;background:linear-gradient(160deg,#2a2440,#191c23 70%);overflow:hidden;position:relative}
+.lead .tx{padding:18px 20px 20px}
+.lead .foto{height:210px}
+.lead.cf .tx{position:absolute;left:0;right:0;bottom:0;padding:60px 20px 18px;background:linear-gradient(180deg,rgba(13,15,20,0),rgba(13,15,20,.92) 55%)}
+.lead.cf{min-height:300px}.lead.cf .foto{height:300px}
 .lead h2{font-family:Newsreader,Georgia,serif;font-weight:500;font-size:25px;line-height:1.18;margin:10px 0 4px}
-.it{display:flex;gap:14px;padding:14px 22px;border-bottom:1px solid var(--line)}
+.it{display:flex;gap:14px;padding:14px 22px;border-bottom:1px solid var(--line);align-items:flex-start}
+.it .mini{width:78px;height:78px;border-radius:14px;object-fit:cover;flex:none;background:#1c1f27;margin-left:auto}
+.it .corpo{flex:1;min-width:0}
 .it:last-child{border:0}
 .it .n{font-family:Newsreader,Georgia,serif;font-size:22px;color:var(--faint);width:18px;flex:none}
 .it h4{font-family:Newsreader,Georgia,serif;font-weight:500;font-size:17px;line-height:1.28;margin-top:2px}
@@ -474,11 +483,12 @@ try{
 
 /* ---------- notícias ---------- */
 const tag=t=>`<span class="tag" style="color:${COR[t]||'var(--gold)'}">${esc(t)}</span>`;
+const foto=(u,c)=>u?`<img class="${c}" src="${esc(u)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:'';
 function lista(itens,rotuloLead){
   if(!itens||!itens.length)return'<p class="sect dim">Sem notícias agora</p>';
   const[l,...resto]=itens;
-  return `<a class="lead" href="${esc(l.link)}" target="_blank" rel="noopener">${tag(rotuloLead||l.tema)}<h2>${esc(l.titulo)}</h2><div class="src">${esc(l.fonte)} · ${ago(l.quando)}</div></a>`+
-    resto.map((n,i)=>`<a class="it" href="${esc(n.link)}" target="_blank" rel="noopener"><div class="n">${i+2}</div><div>${tag(n.tema)}<h4>${esc(n.titulo)}</h4><div class="src">${esc(n.fonte)} · ${ago(n.quando)}</div></div></a>`).join('');
+  return `<a class="lead${l.foto?' cf':''}" href="${esc(l.link)}" target="_blank" rel="noopener">${foto(l.foto,'foto')}<div class="tx">${tag(rotuloLead||l.tema)}<h2>${esc(l.titulo)}</h2><div class="src">${esc(l.fonte)} · ${ago(l.quando)}</div></div></a>`+
+    resto.map((n,i)=>`<a class="it" href="${esc(n.link)}" target="_blank" rel="noopener"><div class="n">${i+2}</div><div class="corpo">${tag(n.tema)}<h4>${esc(n.titulo)}</h4><div class="src">${esc(n.fonte)} · ${ago(n.quando)}</div></div>${foto(n.foto,'mini')}</a>`).join('');
 }
 dados.then(d=>{
   const N=d.noticias||{},D=d.destaques||[];
@@ -488,7 +498,7 @@ dados.then(d=>{
     $('lista').innerHTML=k==='Destaques'?lista(D,D[0]&&D[0].tema+' · principal do dia'):lista(N[k])};
   $('chips').innerHTML=abas.map(k=>`<button class="chip">${esc(k)}</button>`).join('');
   [...$('chips').children].forEach(c=>c.onclick=()=>ver(c.textContent));ver('Destaques');
-  $('cards').innerHTML=D.map(n=>`<a class="card" href="${esc(n.link)}" target="_blank" rel="noopener">${tag(n.tema)}<h3>${esc(n.titulo)}</h3><div class="src">${esc(n.fonte)} · ${ago(n.quando)}</div></a>`).join('');
+  $('cards').innerHTML=D.map(n=>`<a class="card" href="${esc(n.link)}" target="_blank" rel="noopener">${foto(n.foto,'foto')}<div class="tx">${tag(n.tema)}<h3>${esc(n.titulo)}</h3><div class="src">${esc(n.fonte)} · ${ago(n.quando)}</div></div></a>`).join('');
   $('foot1').textContent=d.gerado_em?`Notícias atualizadas ${ago(d.gerado_em)} · o robô passa de hora em hora`:'';
   // Descobrir
   if(d.nasa){$('nasa').href=d.nasa.link;$('nasa').style.backgroundImage=`url("${d.nasa.imagem}")`;$('nasat').textContent=d.nasa.titulo;$('nasad').textContent=d.nasa.texto}

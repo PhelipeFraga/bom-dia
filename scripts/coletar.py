@@ -6,7 +6,9 @@ import gzip
 import json
 import time
 import re
+import urllib.parse
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
@@ -132,6 +134,30 @@ def parecida(chaves, vistas):
     return None
 
 
+MEDIA = "{http://search.yahoo.com/mrss/}"
+CONTEUDO = "{http://purl.org/rss/1.0/modules/content/}encoded"
+IMG_HTML = re.compile(r"""<img[^>]+src=["']([^"']+)""", re.I)
+
+
+def foto_do_feed(it):
+    """Foto que o próprio feed traz (G1, BBC, Canaltech, Tecnoblog); o Google Notícias não traz."""
+    for tag in (MEDIA + "content", MEDIA + "thumbnail"):
+        el = it.find(tag)
+        if el is not None and el.get("url"):
+            return el.get("url")
+    for el in it.iter(MEDIA + "content"):
+        if el.get("url"):
+            return el.get("url")
+    enc = it.find("enclosure")
+    if enc is not None and (enc.get("type") or "").startswith("image"):
+        return enc.get("url")
+    for campo in (CONTEUDO, "description"):
+        m = IMG_HTML.search(it.findtext(campo) or "")
+        if m:
+            return m.group(1)
+    return None
+
+
 def ler_feed(url):
     canal = ET.fromstring(baixar(url)).find("channel")
     padrao = next((nome for dom, nome in NOMES_FONTE.items() if dom in url), None)         or (canal.findtext("title") or "").split(" - ")[0].split(" | ")[0].strip()
@@ -144,7 +170,8 @@ def ler_feed(url):
             quando = parsedate_to_datetime(it.findtext("pubDate")).astimezone(SP)
         except Exception:
             quando = None
-        yield {"titulo": SUFIXOS.sub("", titulo), "fonte": fonte, "quando": quando, "link": it.findtext("link")}
+        yield {"titulo": SUFIXOS.sub("", titulo), "fonte": fonte, "quando": quando, "link": it.findtext("link"),
+               "foto": foto_do_feed(it)}
 
 
 def intercalar(listas):
@@ -223,6 +250,72 @@ def noticias():
 ORDEM_DESTAQUES = ["Brasil", "Mundo", "Economia", "IA e tech", "Ciência", "São Paulo", "Games", "Cultura"]
 
 
+OG_IMAGE = [re.compile(r"""<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)""", re.I),
+            re.compile(r"""<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image""", re.I),
+            re.compile(r"""<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)""", re.I)]
+
+
+def link_original(link):
+    """O link do Google Notícias é um desvio; o próprio Google informa a matéria original nesta consulta."""
+    aid = link.split("/articles/")[1].split("?")[0]
+    html = baixar(f"https://news.google.com/rss/articles/{aid}", tentativas=1).decode("utf-8", "ignore")
+    sg = re.search(r'data-n-a-sg="([^"]+)"', html).group(1)
+    ts = re.search(r'data-n-a-ts="([^"]+)"', html).group(1)
+    pedido = [[["Fbv4je", f'["garturlreq",[["X","X",["X","X"],null,null,1,1,"US:en",null,1,null,null,null,null,null,0,1],'
+                          f'"X","X",1,[1,1,1],1,1,null,0,0,null,0],"{aid}",{ts},"{sg}"]', None, "generic"]]]
+    corpo = urllib.parse.urlencode({"f.req": json.dumps(pedido)}).encode()
+    req = urllib.request.Request("https://news.google.com/_/DotsSplashUi/data/batchexecute", data=corpo,
+                                 headers={**UA, "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"})
+    with urllib.request.urlopen(req, timeout=20) as r:
+        resp = r.read().decode("utf-8", "ignore")
+    return json.loads(json.loads(resp.split("\n\n")[1])[0][2])[1]
+
+
+def foto_da_pagina(url):
+    html = baixar(url, timeout=15, tentativas=1)[:400_000].decode("utf-8", "ignore")
+    for padrao in OG_IMAGE:
+        m = padrao.search(html)
+        if m:
+            return urllib.parse.urljoin(url, m.group(1).replace("&amp;", "&"))
+    return None
+
+
+def completar_fotos(por_tema, guardadas):
+    """Dá foto a cada notícia. Usa a do feed; senão, a já descoberta em passagens anteriores; senão, busca na matéria.
+    Devolve o dicionário atualizado de fotos guardadas (link do Google → {url, foto})."""
+    novas = {}
+    pendentes = [n for lista in por_tema.values() for n in lista if not n.get("foto")]
+
+    def resolver(n):
+        g = n["link"]
+        if g in guardadas:
+            return g, guardadas[g]
+        try:
+            url = link_original(g) if "news.google.com" in g else g
+            return g, {"url": url, "foto": foto_da_pagina(url)}
+        except Exception as e:
+            return g, {"url": None, "foto": None, "erro": str(e)[:80]}
+
+    with ThreadPoolExecutor(max_workers=6) as ex:
+        for g, info in ex.map(resolver, pendentes):
+            novas[g] = info
+    achadas = 0
+    for lista in por_tema.values():
+        for n in lista:
+            info = novas.get(n["link"])
+            if info:
+                if info.get("url"):
+                    n["link"] = info["url"]     # abre direto no site do jornal
+                if info.get("foto"):
+                    n["foto"] = info["foto"]
+            achadas += bool(n.get("foto"))
+    total = sum(len(l) for l in por_tema.values())
+    print(f"fotos: {achadas} de {total} notícias ({len([g for g in novas if g not in guardadas])} buscadas agora)")
+    # guarda só o que deu certo, e no máximo as 400 mais recentes
+    guardadas = {**guardadas, **{g: i for g, i in novas.items() if i.get("foto")}}
+    return dict(list(guardadas.items())[-400:])
+
+
 def destaques(noticias_por_tema, quantos=5):
     """O mais importante do dia: a principal de cada tema (o Google já ordena por relevância),
     na ordem de ORDEM_DESTAQUES."""
@@ -295,9 +388,14 @@ def palavra(hoje):
 def main():
     agora = datetime.now(SP)
     por_tema = noticias()
-    # Tema que veio vazio (fonte fora do ar) mantém as notícias da passagem anterior, se tiverem até 24 h
+    antes = {}
     try:
         antes = json.loads((RAIZ / "data.json").read_text(encoding="utf-8"))
+    except Exception:
+        pass
+    fotos = completar_fotos(por_tema, antes.get("fotos_guardadas", {}))
+    # Tema que veio vazio (fonte fora do ar) mantém as notícias da passagem anterior, se tiverem até 24 h
+    try:
         idade = agora - datetime.fromisoformat(antes["gerado_em"])
         if idade < timedelta(hours=24):
             for tema, lista in antes.get("noticias", {}).items():
@@ -317,6 +415,7 @@ def main():
         "clima": json_de(CLIMA_URL, "clima"),
         "radar": json_de("https://api.rainviewer.com/public/weather-maps.json", "radar"),
         "ar": json_de(AR_URL, "qualidade do ar"),
+        "fotos_guardadas": fotos,
     }
     (RAIZ / "data.json").write_text(json.dumps(dados, ensure_ascii=False, indent=1), encoding="utf-8")
     total = sum(len(v) for v in dados["noticias"].values())

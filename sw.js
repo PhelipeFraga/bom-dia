@@ -2,7 +2,7 @@
 // - páginas do próprio app: busca na rede e guarda a última versão;
 // - dados do robô (GitHub): rede primeiro, cópia guardada se estiver offline;
 // - ícones, letras e biblioteca do mapa (CDNs): guardados na primeira vez e reaproveitados.
-const CACHE = "bom-dia-v11";
+const CACHE = "bom-dia-v12";
 const SHELL = ["./", "index.html", "arte.js", "manifest.json", "icon.svg"];
 const FIXOS = /cdn\.jsdelivr\.net|cdnjs\.cloudflare\.com|fonts\.googleapis\.com|fonts\.gstatic\.com/;
 self.addEventListener("install", e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())));
