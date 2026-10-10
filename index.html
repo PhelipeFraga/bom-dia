@@ -32,23 +32,28 @@ a{color:inherit;text-decoration:none}
 .nav button.on{color:var(--gold)}
 .nav svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
-/* HOJE: atmosfera */
-.atmo{position:absolute;left:0;right:0;top:0;height:calc(640px + var(--safe-top));pointer-events:none;transition:background 1.2s}
-.atmo:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,15,20,0) 45%,var(--bg) 100%)}
+/* HOJE: céu com arte do tempo */
 #t-hoje{position:relative}
-#rain{position:absolute;left:0;right:0;top:0;width:100%;height:calc(420px + var(--safe-top));pointer-events:none;z-index:1}
+.ceu{position:absolute;left:0;right:0;top:0;height:calc(470px + var(--safe-top));pointer-events:none;transition:background 1.2s;
+  background:linear-gradient(180deg,#0f1640 0%,#1c2257 60%,rgba(28,34,87,0) 100%)}
+.ceu:after{content:"";position:absolute;left:0;right:0;bottom:0;height:45%;background:linear-gradient(180deg,rgba(13,15,20,0),var(--bg))}
+#estrelas,#rain{position:absolute;left:0;top:0;width:100%;height:calc(330px + var(--safe-top));pointer-events:none;z-index:1}
+.arte{position:absolute;right:6px;top:calc(40px + var(--safe-top));width:190px;height:190px;z-index:1}
+.arte .ic-arte{display:block;width:190px;height:190px;filter:drop-shadow(0 10px 18px rgba(0,0,0,.22))}
+.arte .ic-arte svg,.arte .ic-nuvem svg{width:100%;height:100%;display:block}
+.arte .lua{position:absolute;inset:0;width:190px;height:190px}
+.arte .ic-nuvem{position:absolute;left:-6px;top:58px;width:150px;height:150px;filter:drop-shadow(0 10px 16px rgba(0,0,0,.35)) brightness(.82) saturate(.8)}
+.legenda{position:absolute;right:24px;top:calc(226px + var(--safe-top));font-size:11.5px;color:rgba(255,255,255,.72);z-index:2}
 .hero{position:relative;z-index:2;padding:calc(34px + var(--safe-top)) 24px 0}
-.dia{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
-.oi{font-size:22px;font-weight:600;margin-top:4px}
-.tl2{display:flex;align-items:flex-end;justify-content:space-between;margin-top:30px;gap:12px}
-.temp{font-family:Inter,Manrope,sans-serif;font-weight:200;font-size:124px;line-height:.82;letter-spacing:-6px}
-.cond{text-align:right;padding-bottom:6px}
-.cond b{display:block;font-size:17px;font-weight:600;line-height:1.25}
-.cond span{display:block;font-size:13px;color:var(--dim);margin-top:4px}
-#ar{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+.dia{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.oi{font-size:22px;font-weight:600;margin-top:4px;text-shadow:0 1px 12px rgba(0,0,0,.18)}
+.temp{font-family:Inter,Manrope,sans-serif;font-weight:200;font-size:104px;line-height:.82;letter-spacing:-5px;margin-top:48px;text-shadow:0 2px 24px rgba(0,0,0,.15)}
+.cond{font-size:17px;font-weight:600;margin-top:18px}
+.meta{display:flex;gap:6px 12px;flex-wrap:wrap;font-size:13px;color:rgba(255,255,255,.75);margin-top:6px}
+#ar{display:none;align-items:center;gap:6px}
 #ar i{width:7px;height:7px;border-radius:50%;display:block}
 #ar em{font-style:normal}
-.vivo{font-size:11px;color:var(--faint);margin-top:18px}
+.vivo{font-size:11px;color:rgba(255,255,255,.45);margin-top:10px}
 .glass{position:relative;z-index:2;margin:18px 16px 0;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:16px 16px 12px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
 .gh{display:flex;justify-content:space-between;align-items:baseline}
 .gh b{font-size:12.5px;font-weight:700;color:var(--rain)}
@@ -64,7 +69,8 @@ a{color:inherit;text-decoration:none}
 .bl{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.4}
 .bl:last-child{border:0}
 .bl b{font-weight:700}
-.ic{width:30px;height:30px;border-radius:10px;flex:none;display:flex;align-items:center;justify-content:center;font-size:15px}
+.ic{width:34px;height:34px;border-radius:11px;flex:none;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.06)}
+.ic img,.ic svg{width:28px;height:28px}
 .cards{display:flex;gap:12px;padding:18px 22px 4px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
 .cards::-webkit-scrollbar{display:none}
 .card{flex:none;width:270px;border-radius:22px;padding:16px 18px;background:var(--card);scroll-snap-align:start;display:block}
@@ -105,12 +111,12 @@ a{color:inherit;text-decoration:none}
 .hr{flex:none;width:58px;padding:12px 0;border-radius:18px;text-align:center}
 .hr.now{background:rgba(255,255,255,.08)}
 .hr .l{font-size:12px;color:var(--dim);font-weight:600}.hr.now .l{color:var(--txt)}
-.hr svg{width:30px;height:30px;margin:8px auto 6px;display:block}
+.hr svg,.hr img{width:38px;height:38px;margin:4px auto 2px;display:block}
 .hr .v{font-size:17px;font-weight:600}
 .hr .p{font-size:11px;color:var(--rain);font-weight:700;height:14px;margin-top:2px}
 .hr.sunx .v{font-size:11.5px;color:var(--gold)}
 .dy{display:grid;grid-template-columns:44px 28px 34px 30px 1fr 30px;align-items:center;gap:6px;padding:11px 0;border-top:1px solid var(--line);font-size:15px}
-.dy .n{font-weight:600}.dy svg{width:26px;height:26px}
+.dy .n{font-weight:600}.dy svg,.dy img{width:32px;height:32px}
 .dy .rp{font-size:12px;color:var(--rain);font-weight:700}
 .dy .mn{color:var(--dim);text-align:right}.dy .mx{text-align:right;font-weight:600}
 .rg{position:relative;height:6px;border-radius:6px;background:rgba(255,255,255,.08)}
@@ -144,15 +150,17 @@ a{color:inherit;text-decoration:none}
 
 <!-- ============ HOJE ============ -->
 <section class="tela on" id="t-hoje">
-  <div class="atmo" id="atmo"></div>
+  <div class="ceu" id="ceu"></div>
+  <canvas id="estrelas"></canvas>
   <canvas id="rain"></canvas>
+  <div class="arte" id="arte"></div>
+  <div class="legenda" id="legenda"></div>
   <div class="hero">
     <div class="dia" id="dia"></div>
     <div class="oi" id="oi">Bom dia, Phelipe</div>
-    <div class="tl2">
-      <div class="temp" id="temp">--°</div>
-      <div class="cond"><b id="cond">Carregando…</b><span id="mm"></span><span id="sens"></span><span id="ar" style="display:none"><i></i><em></em></span></div>
-    </div>
+    <div class="temp" id="temp">--°</div>
+    <div class="cond" id="cond">Carregando…</div>
+    <div class="meta"><span id="mm"></span><span id="sens"></span><span id="ar"><i></i><em></em></span></div>
     <div class="vivo" id="vivo"></div>
   </div>
   <div class="glass">
@@ -229,6 +237,7 @@ a{color:inherit;text-decoration:none}
 </div></nav>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="arte.js"></script>
 <script>
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -255,22 +264,32 @@ $('dia').textContent=agora.toLocaleDateString('pt-BR',{weekday:'long',day:'numer
 $('tdata').textContent='São Paulo · '+agora.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
 $('oi').textContent=(H>=5&&H<12?'Bom dia':H>=12&&H<18?'Boa tarde':'Boa noite')+', Phelipe';
 const noite=H<5||H>=19;
-// Duas luzes suaves sobre o fundo escuro; as cores seguem a hora do dia (e ficam acinzentadas com chuva)
-function ceu(chuva){
-  const[a,b]=chuva?['#3b4a66','#2c3445']
-    :noite?['#26336e','#3d2a63']
-    :H<7?['#6a4a86','#c27a6c']
-    :H<16?['#2f63c4','#3f86c9']
-    :['#6b3a80','#c0645a'];
-  $('atmo').style.background=`radial-gradient(120% 60% at 85% 0%,${a} 0%,rgba(0,0,0,0) 62%),radial-gradient(90% 55% at 0% 28%,${b} 0%,rgba(0,0,0,0) 62%),var(--bg)`;
+// Ícones Meteocons embutidos no próprio HTML: assim dá para acelerar o giro do sol (45 s → 16 s)
+// e cada ícone ganha ids próprios (os arquivos usam os mesmos ids e se misturariam)
+let nIcone=0;
+function embutirIcones(el){
+  el.querySelectorAll('img[src*="weather-icons"]').forEach(img=>{
+    fetch(img.src).then(r=>r.text()).then(t=>{
+      const k='i'+(nIcone++)+'_';
+      t=t.replace(/dur="45s"/g,'dur="16s"').replace(/id="([^"]+)"/g,`id="${k}$1"`).replace(/url\(#([^)]+)\)/g,`url(#${k}$1)`).replace(/href="#([^"]+)"/g,`href="#${k}$1"`);
+      const sp=document.createElement('span');sp.className=img.className;sp.innerHTML=t;img.replaceWith(sp);
+    }).catch(()=>{});
+  });
 }
-ceu(false);
+function ceuDoTempo(code,dia){
+  const a=arteTempo(code,dia,new Date());
+  $('ceu').style.background=a.fundo;$('arte').innerHTML=a.html;$('legenda').textContent=a.legenda;
+  embutirIcones($('arte'));
+  if(a.estrelas)ceuEstrelado($('estrelas'),a.estrelas);
+  return a;
+}
+function ceu(){} // mantido para chamadas antigas
 let chovendo=false;
 const cv=$('rain'),cx=cv.getContext('2d'),gotas=[];
 function tam(){cv.width=cv.offsetWidth*devicePixelRatio;cv.height=cv.offsetHeight*devicePixelRatio}
 tam();addEventListener('resize',tam);
-for(let i=0;i<90;i++)gotas.push({x:Math.random(),y:Math.random(),v:.005+Math.random()*.007,l:9+Math.random()*12});
-(function loop(){cx.clearRect(0,0,cv.width,cv.height);if(chovendo){cx.strokeStyle="rgba(205,228,255,.28)";cx.lineWidth=1.1*devicePixelRatio;cx.beginPath();
+for(let i=0;i<140;i++)gotas.push({x:Math.random(),y:Math.random(),v:.008+Math.random()*.008,l:12+Math.random()*16});
+(function loop(){cx.clearRect(0,0,cv.width,cv.height);if(chovendo){cx.strokeStyle="rgba(205,228,255,.38)";cx.lineWidth=1.2*devicePixelRatio;cx.beginPath();
 for(const d of gotas){d.y+=d.v;if(d.y>1){d.y=-.05;d.x=Math.random()}const X=d.x*cv.width,Y=d.y*cv.height;cx.moveTo(X,Y);cx.lineTo(X-2*devicePixelRatio,Y+d.l*devicePixelRatio)}cx.stroke()}
 requestAnimationFrame(loop)})();
 
@@ -306,18 +325,10 @@ function ar(a){
 const CL='<path d="M8 19h9.5a4.5 4.5 0 0 0 .6-8.96A6 6 0 0 0 6.5 11a4 4 0 0 0 1.5 8z" fill="#e8edf5"/>';
 const CLD='<path d="M8 19h9.5a4.5 4.5 0 0 0 .6-8.96A6 6 0 0 0 6.5 11a4 4 0 0 0 1.5 8z" fill="#aab4c4"/>';
 function ic(code,day){
-  const sunG='<circle cx="12" cy="12" r="4.6" fill="#ffc94d"/>'+[0,45,90,135,180,225,270,315].map(a=>`<line x1="12" y1="3" x2="12" y2="5.2" stroke="#ffc94d" stroke-width="1.8" stroke-linecap="round" transform="rotate(${a} 12 12)"/>`).join('');
-  const moon='<path d="M15.5 4.5a7.5 7.5 0 1 0 4 12.8A6.5 6.5 0 0 1 15.5 4.5z" fill="#dfe6ff"/>';
-  const small=day?'<g transform="translate(-3 -4) scale(.75)">'+sunG+'</g>':'<g transform="translate(-2 -4) scale(.7)">'+moon+'</g>';
-  const drops='<g stroke="#6fd0ff" stroke-width="1.8" stroke-linecap="round"><line x1="9" y1="20.5" x2="8" y2="23"/><line x1="13" y1="20.5" x2="12" y2="23"/><line x1="17" y1="20.5" x2="16" y2="23"/></g>';
-  let s;
-  if(code<=1)s=day?sunG:moon;
-  else if(code==2)s=small+CL;
-  else if(code==3)s=CL;
-  else if(code<=48)s=CL+'<g stroke="#aab4c4" stroke-width="1.6" stroke-linecap="round"><line x1="5" y1="21" x2="19" y2="21"/><line x1="7" y1="23" x2="17" y2="23"/></g>';
-  else if(code>=95)s=CLD+'<path d="M13 17l-3 4h3l-2 3.5" fill="none" stroke="#ffd34d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>';
-  else s=(code>=61?CLD:CL)+drops;
-  return `<svg viewBox="0 0 24 25">${s}</svg>`;
+  const n=code<=1?(day?'clear-day':'clear-night'):code===2?(day?'partly-cloudy-day':'partly-cloudy-night'):code===3?(day?'overcast-day':'overcast-night')
+    :code<=48?(day?'fog-day':'fog-night'):code<=57?'drizzle':code<=67?'rain':code<=82?(day?'partly-cloudy-day-rain':'partly-cloudy-night-rain')
+    :(day?'thunderstorms-day-rain':'thunderstorms-night-rain');
+  return `<img src="https://cdn.jsdelivr.net/gh/basmilius/weather-icons@2.0.0/production/fill/all/${n}.svg" alt="" loading="lazy">`;
 }
 
 /* ---------- tempo ---------- */
@@ -350,10 +361,11 @@ function horas(w,c){
   for(let i=st;i<Math.min(st+24,T.length);i++){const t=T[i],p=w.hourly.precipitation_probability[i];
     items.push({t,html:`<div class="hr${i===st?' now':''}"><div class="l"${i!==st&&t.getHours()===0?' style="color:var(--gold)"':''}>${i===st?'Agora':t.getHours()===0?t.toLocaleDateString('pt-BR',{weekday:'short'}).replace('.',''):t.getHours()+'h'}</div>${ic(w.hourly.weather_code[i],isDay(t))}<div class="v">${Math.round(i===st?c.temperature_2m:w.hourly.temperature_2m[i])}°</div><div class="p">${p>=20?p+'%':''}</div></div>`})}
   const end=items.length?items[items.length-1].t:ct;
-  const up='<circle cx="12" cy="15" r="4.5" fill="#ffc94d"/><line x1="3" y1="20" x2="21" y2="20" stroke="#ffc27a" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3v5M9.5 5.5L12 3l2.5 2.5" fill="none" stroke="#ffc27a" stroke-width="1.6" stroke-linecap="round"/>';
-  const dn='<circle cx="12" cy="15" r="4.5" fill="#ff9a5a"/><line x1="3" y1="20" x2="21" y2="20" stroke="#ffc27a" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3v5M9.5 5.5L12 8l2.5-2.5" fill="none" stroke="#ffc27a" stroke-width="1.6" stroke-linecap="round"/>';
-  [...rises.map(t=>[t,'Nascer',up]),...sets.map(t=>[t,'Pôr do sol',dn])].forEach(([t,l,s])=>{
-    if(t>ct&&t<end)items.push({t,html:`<div class="hr sunx"><div class="l">${hm(t)}</div><svg viewBox="0 0 24 25">${s}</svg><div class="v">${l}</div><div class="p"></div></div>`})});
+  const up0='<circle cx="12" cy="15" r="4.5" fill="#ffc94d"/><line x1="3" y1="20" x2="21" y2="20" stroke="#ffc27a" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3v5M9.5 5.5L12 3l2.5 2.5" fill="none" stroke="#ffc27a" stroke-width="1.6" stroke-linecap="round"/>';
+  const dn0='<circle cx="12" cy="15" r="4.5" fill="#ff9a5a"/><line x1="3" y1="20" x2="21" y2="20" stroke="#ffc27a" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3v5M9.5 5.5L12 8l2.5-2.5" fill="none" stroke="#ffc27a" stroke-width="1.6" stroke-linecap="round"/>';
+  const MC='https://cdn.jsdelivr.net/gh/basmilius/weather-icons@2.0.0/production/fill/all/';
+  [...rises.map(t=>[t,'Nascer','sunrise']),...sets.map(t=>[t,'Pôr do sol','sunset'])].forEach(([t,l,n])=>{
+    if(t>ct&&t<end)items.push({t,html:`<div class="hr sunx"><div class="l">${hm(t)}</div><img src="${MC}${n}.svg" alt=""><div class="v">${l}</div><div class="p"></div></div>`})});
   items.sort((a,b)=>a.t-b.t);$('hrs').innerHTML=items.map(x=>x.html).join('');
 }
 function dias(w,c){
@@ -377,7 +389,7 @@ function aoVivo(url,reserva){
 
 /* ---------- dados do robô ---------- */
 // No ar, lê a versão mais nova direto do GitHub; testando no PC (localhost), lê o arquivo local
-const RAW='https://raw.githubusercontent.com/PhelipeFraga/bom-dia/main/data.json?t='+Date.now();
+const RAW='https://raw.githubusercontent.com/PhelipeFraga/bom-dia/dados/data.json?t='+Date.now();
 const fontes=location.hostname==='localhost'?['data.json',RAW]:[RAW,'data.json'];
 const dados=fetch(fontes[0]).then(r=>{if(!r.ok)throw 0;return r.json()})
   .catch(()=>fetch(fontes[1]).then(r=>r.json())).catch(()=>({}));
@@ -389,11 +401,12 @@ const clima=aoVivo(WURL,()=>dados.then(d=>d.clima)).then(({d:w,vivo})=>{
   const c=w.current,code=c.weather_code;
   $('temp').textContent=Math.round(c.temperature_2m)+'°';
   $('cond').textContent=WMO[code]||'—';
+  {const R=new Date(w.daily.sunrise[0]),S=new Date(w.daily.sunset[0]),a=new Date();
+   const arte=ceuDoTempo(code,a>=R&&a<S);chovendo=arte.chuva}
   $('mm').textContent=`máx ${Math.round(w.daily.temperature_2m_max[0])}° · mín ${Math.round(w.daily.temperature_2m_min[0])}°`;
   if(c.apparent_temperature!=null)$('sens').textContent=`sensação ${Math.round(c.apparent_temperature)}°`;
   if(w.hourly.precipitation)graficoChuva(w);
   $('vivo').textContent=(vivo?'ao vivo ':'dados das ')+hm(new Date(c.time));
-  chovendo=code>=51||c.precipitation>0;ceu(chovendo);
   previsao=chuvaPrevista(w);
   $('rainmax').textContent=`chuva até ${w.daily.precipitation_probability_max[0]}% hoje`;
   sol(w);setInterval(()=>sol(w),6e4);horas(w,c);dias(w,c);
@@ -487,13 +500,14 @@ dados.then(d=>{
   clima.then(p=>{
     const L=[];
     if(p){const q=p.amanha?'Amanhã: ':'';
-      if(p.mx>=50)L.push(['#1d3346','☂',`${q}leve guarda-chuva, <b>${p.mx}% de chuva</b> por volta das ${p.hora}h`]);
-      else if(p.mx>=25)L.push(['#1d3346','☁',`${q}pode chover um pouco, <b>${p.mx}%</b> por volta das ${p.hora}h`]);
-      else if(p.tmax>=30)L.push(['#3a2a1c','☀',`${q}dia quente, máxima de <b>${p.tmax}°</b>`]);
-      else L.push(['#1d3346','☀',`${q}<b>sem chuva</b> prevista`+(p.amanha?'':' até a noite')])}
-    (d.avisos_sp||[]).slice(0,1).forEach(a=>L.push(['#2b2340','⇄',esc(a.titulo)]));
-    if(D[0])L.push(['#3a2a1c','★',`Em destaque: <b>${esc(D[0].titulo)}</b>`]);
-    $('resumo').innerHTML=L.map(([bg,i,t])=>`<div class="bl"><div class="ic" style="background:${bg}">${i}</div><div>${t[0].toUpperCase()+t.slice(1)}</div></div>`).join('');
+      const MI=n=>`<img src="https://cdn.jsdelivr.net/gh/basmilius/weather-icons@2.0.0/production/fill/all/${n}.svg" alt="">`;
+      if(p.mx>=50)L.push(['',MI('umbrella'),`${q}leve guarda-chuva, <b>${p.mx}% de chuva</b> por volta das ${p.hora}h`]);
+      else if(p.mx>=25)L.push(['',MI('raindrop'),`${q}pode chover um pouco, <b>${p.mx}%</b> por volta das ${p.hora}h`]);
+      else if(p.tmax>=30)L.push(['',MI('thermometer-warmer'),`${q}dia quente, máxima de <b>${p.tmax}°</b>`]);
+      else L.push(['',MI('clear-day'),`${q}<b>sem chuva</b> prevista`+(p.amanha?'':' até a noite')])}
+    (d.avisos_sp||[]).slice(0,1).forEach(a=>L.push(['','<svg viewBox="0 0 24 24" fill="none" stroke="#c9b4ff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="14" rx="4"/><path d="M5 11h14M9 21l1.5-4M15 21l-1.5-4"/><circle cx="9" cy="14" r=".8" fill="#c9b4ff"/><circle cx="15" cy="14" r=".8" fill="#c9b4ff"/></svg>',esc(a.titulo)]));
+    if(D[0])L.push(['','<svg viewBox="0 0 24 24" fill="none" stroke="#ffd08a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h13a2 2 0 0 1 2 2v12H6a2 2 0 0 1-2-2z"/><path d="M19 9h1a1 1 0 0 1 1 1v7a2 2 0 0 1-2 2M8 9h7M8 13h7M8 17h4"/></svg>',`Em destaque: <b>${esc(D[0].titulo)}</b>`]);
+    $('resumo').innerHTML=L.map(([bg,i,t])=>`<div class="bl"><div class="ic">${i}</div><div>${t[0].toUpperCase()+t.slice(1)}</div></div>`).join('');
   });
 });
 

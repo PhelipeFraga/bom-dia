@@ -2,6 +2,7 @@
 e grava tudo em data.json, que a página lê. Roda no GitHub Actions às 6h50.
 Só usa a biblioteca padrão do Python (nada para instalar)."""
 
+import gzip
 import json
 import time
 import re
@@ -42,6 +43,18 @@ TEMAS = {
         GN.format("search?q=livro+(%22Companhia+das+Letras%22+OR+Intr%C3%ADnseca+OR+%22mais+vendidos%22+OR+Jabuti+OR+Flip)+when:3d&"),
     ],
 }
+# Reserva: feeds diretos dos jornais, usados quando o Google Notícias falha ou traz pouco
+G1 = "https://g1.globo.com/rss/g1/{}/"
+RESERVA = {
+    "Brasil": [G1.format("politica")],
+    "Mundo": [G1.format("mundo"), "https://feeds.bbci.co.uk/portuguese/rss.xml"],
+    "Economia": [G1.format("economia")],
+    "São Paulo": [G1.format("sp/sao-paulo")],
+    "IA e tech": [G1.format("tecnologia")],
+    "Ciência": [G1.format("ciencia"), "https://canaltech.com.br/rss/espaco/"],
+    "Cultura": [G1.format("pop-arte")],
+}
+NOMES_FONTE = {"g1.globo.com": "G1", "bbci.co.uk": "BBC News Brasil"}
 POR_TEMA = 5
 MAX_HORAS = 36        # notícia mais velha que isso não entra
 MAX_POR_FONTE = 2     # para não virar "só G1"
@@ -98,7 +111,9 @@ def baixar(url, timeout=25, tentativas=3):
     for n in range(tentativas):
         try:
             with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=timeout) as r:
-                return r.read()
+                corpo = r.read()
+                # alguns sites (G1) mandam o conteúdo compactado mesmo sem pedirmos
+                return gzip.decompress(corpo) if corpo[:2] == bytes((0x1F, 0x8B)) else corpo
         except Exception:
             if n == tentativas - 1:
                 raise
@@ -119,7 +134,7 @@ def parecida(chaves, vistas):
 
 def ler_feed(url):
     canal = ET.fromstring(baixar(url)).find("channel")
-    padrao = (canal.findtext("title") or "").split(" - ")[0].split(" | ")[0].strip()
+    padrao = next((nome for dom, nome in NOMES_FONTE.items() if dom in url), None)         or (canal.findtext("title") or "").split(" - ")[0].split(" | ")[0].strip()
     for it in canal.iter("item"):
         titulo = (it.findtext("title") or "").strip()
         fonte = it.findtext("source") or padrao
@@ -139,45 +154,64 @@ def intercalar(listas):
     yield from maior[min(map(len, listas)):]
 
 
+def baixar_feeds(tema, urls):
+    listas = []
+    for url in urls:
+        try:
+            listas.append(list(ler_feed(url)))
+        except Exception as e:
+            print(f"[aviso] notícias {tema} ({url}): {e}")
+    return listas
+
+
+def filtrar(tema, listas, vistas, limite, lista, teto_fonte=MAX_POR_FONTE):
+    """Passa o crivo e acrescenta à lista do tema até POR_TEMA; devolve quantas foram cortadas."""
+    por_fonte, cortadas = {}, 0
+    for n in lista:
+        por_fonte[n["fonte"]] = por_fonte.get(n["fonte"], 0) + 1
+    for n in intercalar(listas) if listas else []:
+        chaves = palavras_chave(n["titulo"])
+        if (
+            (n["quando"] and n["quando"] < limite)
+            or BLOQUEIO_GERAL.search(n["titulo"])
+            or BLOQUEIO_CRIMES.search(n["titulo"])
+            or (tema not in SEM_FILTRO_TRAGEDIAS and BLOQUEIO_TRAGEDIAS.search(n["titulo"]))
+            or (tema in BLOQUEIO_TEMA and BLOQUEIO_TEMA[tema].search(n["titulo"]))
+            or FONTES_RUINS.match(n["fonte"])
+            or len(chaves) < 3
+        ):
+            cortadas += 1
+            continue
+        igual = parecida(chaves, vistas)
+        if igual:
+            # Outro veículo dando a mesma notícia: não repete, mas conta como cobertura
+            if n["fonte"] not in igual["veiculos"]:
+                igual["veiculos"].append(n["fonte"])
+            continue
+        if len(lista) == POR_TEMA or por_fonte.get(n["fonte"], 0) >= teto_fonte:
+            vistas.append((chaves, {"veiculos": [n["fonte"]]}))  # só para contar cobertura
+            continue
+        n["veiculos"] = [n["fonte"]]
+        vistas.append((chaves, n))
+        por_fonte[n["fonte"]] = por_fonte.get(n["fonte"], 0) + 1
+        n["quando"] = n["quando"].isoformat() if n["quando"] else None
+        n["tema"] = tema
+        lista.append(n)
+    return cortadas
+
+
 def noticias():
     saida, vistas = {}, []   # vistas vale entre temas: a mesma notícia não aparece duas vezes
     limite = datetime.now(SP) - timedelta(hours=MAX_HORAS)
     for tema, urls in TEMAS.items():
-        listas = []
-        for url in urls:
-            try:
-                listas.append(list(ler_feed(url)))
-            except Exception as e:
-                print(f"[aviso] notícias {tema} ({url}): {e}")
-        lista, por_fonte, cortadas = [], {}, 0
-        for n in intercalar(listas) if listas else []:
-            chaves = palavras_chave(n["titulo"])
-            if (
-                (n["quando"] and n["quando"] < limite)
-                or BLOQUEIO_GERAL.search(n["titulo"])
-                or BLOQUEIO_CRIMES.search(n["titulo"])
-                or (tema not in SEM_FILTRO_TRAGEDIAS and BLOQUEIO_TRAGEDIAS.search(n["titulo"]))
-                or (tema in BLOQUEIO_TEMA and BLOQUEIO_TEMA[tema].search(n["titulo"]))
-                or FONTES_RUINS.match(n["fonte"])
-                or len(chaves) < 3
-            ):
-                cortadas += 1
-                continue
-            igual = parecida(chaves, vistas)
-            if igual:
-                # Outro veículo dando a mesma notícia: não repete, mas conta como cobertura
-                if n["fonte"] not in igual["veiculos"]:
-                    igual["veiculos"].append(n["fonte"])
-                continue
-            if len(lista) == POR_TEMA or por_fonte.get(n["fonte"], 0) >= MAX_POR_FONTE:
-                vistas.append((chaves, {"veiculos": [n["fonte"]]}))  # só para contar cobertura
-                continue
-            n["veiculos"] = [n["fonte"]]
-            vistas.append((chaves, n))
-            por_fonte[n["fonte"]] = por_fonte.get(n["fonte"], 0) + 1
-            n["quando"] = n["quando"].isoformat() if n["quando"] else None
-            n["tema"] = tema
-            lista.append(n)
+        lista = []
+        cortadas = filtrar(tema, baixar_feeds(tema, urls), vistas, limite, lista)
+        if len(lista) < 3 and tema in RESERVA:
+            # Google falhou ou trouxe pouco: completa com os feeds diretos dos jornais
+            antes = len(lista)
+            # na reserva a fonte é uma só (G1), então vale até POR_TEMA do mesmo veículo e notícias de até 72 h
+            filtrar(tema, baixar_feeds(tema, RESERVA[tema]), vistas, limite - timedelta(hours=36), lista, POR_TEMA)
+            print(f"[aviso] {tema}: Google trouxe {antes}; completado com a reserva ({len(lista)})")
         print(f"{tema}: {len(lista)} entraram, {cortadas} cortadas pelo crivo")
         saida[tema] = lista
     for lista in saida.values():
