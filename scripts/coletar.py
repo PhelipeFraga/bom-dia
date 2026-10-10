@@ -15,35 +15,75 @@ SP = timezone(timedelta(hours=-3))  # Brasil sem horário de verão desde 2019
 UA = {"User-Agent": "bom-dia/1.0 (github.com/PhelipeFraga/bom-dia)"}
 
 GN = "https://news.google.com/rss/{}hl=pt-BR&gl=BR&ceid=BR:pt-419"
-# Cada tema pode juntar mais de um feed; os itens são intercalados entre eles
+# Temas escolhidos pelo Phelipe em 2026-10-09. Cada tema pode juntar mais de um feed;
+# os itens são intercalados entre eles. A ordem aqui é a ordem das abas na página.
 TEMAS = {
     "Brasil": [GN.format("headlines/section/topic/NATION?")],
     "Mundo": [GN.format("headlines/section/topic/WORLD?")],
-    "Ciência": [GN.format("headlines/section/topic/SCIENCE?")],
+    "Economia": [GN.format("headlines/section/topic/BUSINESS?")],
+    "São Paulo": [GN.format("search?q=%22S%C3%A3o+Paulo%22+(prefeitura+OR+metr%C3%B4+OR+CPTM+OR+Sabesp+OR+Enel+OR+tr%C3%A2nsito+OR+%22na+capital%22)+when:1d&")],
     # O tema Tecnologia do Google Notícias em português mistura celebridade e polícia
-    "Tecnologia": ["https://canaltech.com.br/rss/", "https://tecnoblog.net/feed/"],
+    "IA e tech": [
+        "https://canaltech.com.br/rss/",
+        "https://tecnoblog.net/feed/",
+        GN.format("search?q=%22intelig%C3%AAncia+artificial%22+OR+OpenAI+OR+Anthropic+OR+Gemini+when:1d&"),
+    ],
+    "Ciência": [GN.format("headlines/section/topic/SCIENCE?")],
     "Games": [GN.format("search?q=PS5+OR+PlayStation+OR+Xbox+OR+Nintendo+OR+%22jogo+de+videogame%22+when:2d&")],
+    "Cultura": [
+        GN.format("search?q=(Netflix+OR+%22Prime+Video%22+OR+HBO+OR+%22Disney%2B%22+OR+cinema)"
+                  "+(estreia+OR+trailer+OR+temporada+OR+cr%C3%ADtica)+when:2d&"),
+        GN.format("search?q=livro+(%22Companhia+das+Letras%22+OR+Intr%C3%ADnseca+OR+%22mais+vendidos%22+OR+Jabuti+OR+Flip)+when:3d&"),
+    ],
 }
-POR_TEMA = 6
+POR_TEMA = 5
 MAX_HORAS = 36        # notícia mais velha que isso não entra
 MAX_POR_FONTE = 2     # para não virar "só G1"
 
 # O crivo: o que nunca entra, em qualquer tema
-BLOQUEIO_GERAL = re.compile(
-    r"mega-?sena|lotof[aá]cil|quina|loteria|resultado d[oa] sorteio|hor[oó]scopo|signo|"
-    r"BBB|big brother|a fazenda|novela|fofoca|ex-bbb|influenciador|"
-    r"onde assistir|como assistir|ao vivo:|palpite|bets?|casa de apostas|apostas esportivas|cupom|"
+LIXO = (
+    r"mega-?sena|lotof[aá]cil|\bquina\b|loteria|resultado d[oa] sorteio|hor[oó]scopo|\bsignos?\b|"
+    r"onde assistir|como assistir|ao vivo|palpite|\bbets?\b|casa de apostas|apostas esportivas|cupom|"
     r"black friday|menor pre[cç]o|\d+% ?off|em oferta|sem juros|pre[cç]o baix|"
     r"^como |^veja como|vale a pena comprar|melhores (celulares|tvs|notebooks|fones)|"
-    r"veja (as|os|fotos|v[ií]deo)|v[ií]deo:|fotos:|quiz|teste:", re.I)
+    r"veja (as|os|fotos|v[ií]deo)|v[ií]deo:|fotos:|\bquiz\b|teste:|reflex[aã]o d[ao]|a frase"
+)
+# Escolhas do Phelipe: nada de crimes e tragédias, celebridades ou esportes de manhã
+CRIMES = (
+    r"assassin|homic[ií]dio|feminic|latroc|\bpres[oa]s?\b|pris[aã]o|pol[ií]cia|\bPM\b|tiroteio|\bbalead|"
+    r"atira|esfaque|estupr|sequestr|\broub|furto|assalt|\bcrime|criminos|tr[aá]fico|fac[cç][aã]o|"
+    r"execu[cç][aã]o de condenad|fuzilamento"
+)
+TRAGEDIAS = (
+    r"\bmort[eoa]s?\b|\bmorre|cad[aá]ver|corpo (é|e) encontrado|desaparecid|acidente|avi[aã]o cai|"
+    r"em chamas|inc[eê]ndio|explos|desab|naufr[aá]g|enchente|deslizamento|trag[eé]dia|v[ií]timas?|ferid[oa]s"
+)
+CELEBRIDADES = (
+    r"\bBBB\b|big brother|a fazenda|novela|fofoca|ex-bbb|influenciador|famos[oa]s?\b|"
+    r"pl[aá]stica|namorad|affair|separa[cç][aã]o|div[oó]rcio|web reage|internautas|viraliza|"
+    r"look|mans[aã]o|p[oõ]e (à|a) venda|herdeir"
+)
+ESPORTES = (
+    r"futebol|brasileir[aã]o|libertadores|sul-americana|\bcopa do\b|\bgols?\b|jogada|rodada|"
+    r"campeonato|sele[cç][aã]o brasileira|\bt[eé]cnico do\b|f[oó]rmula 1|\bF1\b|\bNBA\b|\bUFC\b|"
+    r"\bt[eê]nis\b|v[oô]lei|corinthians|palmeiras|flamengo|fluminense|botafogo|vasco|gr[eê]mio|"
+    r"cruzeiro|atl[eé]tico-mg|\bSPFC\b|tricolor|ol[ií]mpi"
+)
+BLOQUEIO_GERAL = re.compile("|".join([LIXO, CELEBRIDADES, ESPORTES]), re.I)
+BLOQUEIO_CRIMES = re.compile(CRIMES, re.I)
+# Em Mundo, guerra e conflito fazem parte da geopolítica; o filtro de tragédias não se aplica lá
+BLOQUEIO_TRAGEDIAS = re.compile(TRAGEDIAS, re.I)
+SEM_FILTRO_TRAGEDIAS = {"Mundo"}
 # Ruído específico de cada tema
 BLOQUEIO_TEMA = {
-    "Games": re.compile(r"futebol|brasileir[aã]o|libertadores|gol|jogada|rodada|copa do|"
-                        r"cassino|tigrinho|loteria|bets?", re.I),
+    "Games": re.compile(r"cassino|tigrinho", re.I),
 }
-# Agregadores, fofoca, propaganda de marca e de partido
-FONTES_RUINS = re.compile(r"^(Terra|MSN|Yahoo|Metrópoles Entretenimento|Notícias da TV|Gshow|"
-                          r"Nintendo|XBOX Wire|Xbox Wire|PlayStation\.Blog.*|Partido .*|PT|PL)$", re.I)
+# Agregadores, fofoca, propaganda de marca, de partido e comunicados de órgãos públicos
+FONTES_RUINS = re.compile(
+    r"^(Terra|MSN|Yahoo.*|Metrópoles Entretenimento|Notícias da TV|Gshow|Quem|Contigo.*|"
+    r"Nintendo|XBOX Wire|Xbox Wire|PlayStation\.Blog.*|Netflix|Partido .*|PT|PL|"
+    r"Prefeitura.*|Governo.*|Secretaria.*|Associa[cç][aã]o.*|Ajufe|Sindicato.*|.*\.gov\.br|Tribunal.*|TJ.*|OAB.*|Universidade.*|UF[A-Z]+.*|"
+    r"Comunica .*|C[aâ]mara Municipal.*|Assembleia.*|Minist[eé]rio.*)$", re.I)
 SUFIXOS = re.compile(r"\s*[;|–-]\s*(V[IÍ]DEO|VÍDEOS|FOTOS|AO VIVO)\s*$", re.I)
 
 
@@ -94,15 +134,16 @@ def noticias():
             except Exception as e:
                 print(f"[aviso] notícias {tema} ({url}): {e}")
         lista, por_fonte, cortadas = [], {}, 0
-        teto_fonte = MAX_POR_FONTE if len(urls) == 1 else POR_TEMA // len(urls)
         for n in intercalar(listas) if listas else []:
             chaves = palavras_chave(n["titulo"])
             if (
                 (n["quando"] and n["quando"] < limite)
                 or BLOQUEIO_GERAL.search(n["titulo"])
+                or BLOQUEIO_CRIMES.search(n["titulo"])
+                or (tema not in SEM_FILTRO_TRAGEDIAS and BLOQUEIO_TRAGEDIAS.search(n["titulo"]))
                 or (tema in BLOQUEIO_TEMA and BLOQUEIO_TEMA[tema].search(n["titulo"]))
                 or FONTES_RUINS.match(n["fonte"])
-                or por_fonte.get(n["fonte"], 0) >= teto_fonte
+                or por_fonte.get(n["fonte"], 0) >= MAX_POR_FONTE
                 or len(chaves) < 3
                 or parecida(chaves, vistas)
             ):
