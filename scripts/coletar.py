@@ -3,6 +3,7 @@ e grava tudo em data.json, que a página lê. Roda no GitHub Actions às 6h50.
 Só usa a biblioteca padrão do Python (nada para instalar)."""
 
 import json
+import time
 import re
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -12,7 +13,12 @@ from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
 SP = timezone(timedelta(hours=-3))  # Brasil sem horário de verão desde 2019
-UA = {"User-Agent": "bom-dia/1.0 (github.com/PhelipeFraga/bom-dia)"}
+# Identificação de navegador comum: o Google Notícias às vezes recusa pedidos de robôs
+UA = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                  "(KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+    "Accept-Language": "pt-BR,pt;q=0.9",
+}
 
 GN = "https://news.google.com/rss/{}hl=pt-BR&gl=BR&ceid=BR:pt-419"
 # Temas escolhidos pelo Phelipe em 2026-10-09. Cada tema pode juntar mais de um feed;
@@ -87,9 +93,16 @@ FONTES_RUINS = re.compile(
 SUFIXOS = re.compile(r"\s*[;|–-]\s*(V[IÍ]DEO|VÍDEOS|FOTOS|AO VIVO)\s*$", re.I)
 
 
-def baixar(url, timeout=25):
-    with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=timeout) as r:
-        return r.read()
+def baixar(url, timeout=25, tentativas=3):
+    """Baixa com até 3 tentativas (espera 5 s e 15 s entre elas)."""
+    for n in range(tentativas):
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=timeout) as r:
+                return r.read()
+        except Exception:
+            if n == tentativas - 1:
+                raise
+            time.sleep(5 if n == 0 else 15)
 
 
 def palavras_chave(titulo):
@@ -248,6 +261,17 @@ def palavra(hoje):
 def main():
     agora = datetime.now(SP)
     por_tema = noticias()
+    # Tema que veio vazio (fonte fora do ar) mantém as notícias da passagem anterior, se tiverem até 24 h
+    try:
+        antes = json.loads((RAIZ / "data.json").read_text(encoding="utf-8"))
+        idade = agora - datetime.fromisoformat(antes["gerado_em"])
+        if idade < timedelta(hours=24):
+            for tema, lista in antes.get("noticias", {}).items():
+                if not por_tema.get(tema) and lista:
+                    por_tema[tema] = lista
+                    print(f"[aviso] {tema}: fonte vazia, mantidas as notícias anteriores")
+    except Exception as e:
+        print(f"[aviso] sem dados anteriores para reaproveitar: {e}")
     dados = {
         "gerado_em": agora.isoformat(timespec="minutes"),
         "destaques": destaques(por_tema),

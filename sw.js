@@ -1,5 +1,5 @@
 // Guarda a página para abrir sem internet; dados de clima e radar sempre tentam a rede primeiro.
-const CACHE = "bom-dia-v7";
+const CACHE = "bom-dia-v8";
 const SHELL = ["./", "index.html", "manifest.json", "icon.svg"];
 self.addEventListener("install", e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())));
 self.addEventListener("activate", e => e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())));

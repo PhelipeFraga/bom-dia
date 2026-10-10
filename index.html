@@ -45,18 +45,19 @@ a{color:inherit;text-decoration:none}
 .cond{text-align:right;padding-bottom:6px}
 .cond b{display:block;font-size:17px;font-weight:600;line-height:1.25}
 .cond span{display:block;font-size:13px;color:var(--dim);margin-top:4px}
-.ar{display:inline-flex;align-items:center;gap:8px;margin-top:22px;font-size:12.5px;font-weight:600;padding:7px 12px 7px 10px;border-radius:99px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08)}
-.ar i{width:8px;height:8px;border-radius:50%;display:block}
-.vivo{font-size:11px;color:var(--faint);margin-left:10px}
+#ar{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+#ar i{width:7px;height:7px;border-radius:50%;display:block}
+#ar em{font-style:normal}
+.vivo{font-size:11px;color:var(--faint);margin-top:18px}
 .glass{position:relative;z-index:2;margin:18px 16px 0;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:16px 16px 12px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
 .gh{display:flex;justify-content:space-between;align-items:baseline}
 .gh b{font-size:12.5px;font-weight:700;color:var(--rain)}
-.mm{display:flex;align-items:flex-end;gap:5px;height:78px;margin-top:14px}
+.mm{display:flex;align-items:flex-end;gap:3px;height:78px;margin-top:14px}
 .mm div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
 .mm i{display:block;width:100%;border-radius:4px 4px 2px 2px;background:linear-gradient(180deg,#a9dcff,#5aa9ea);min-height:3px}
-.mm em{font-style:normal;font-size:9.5px;font-weight:700;color:var(--rain);margin-bottom:3px;height:12px}
-.mmx{display:flex;gap:5px;margin-top:6px}
-.mmx span{flex:1;text-align:center;font-size:10.5px;color:var(--faint)}
+.mm em{font-style:normal;font-size:9px;white-space:nowrap;font-weight:700;color:var(--rain);margin-bottom:3px;height:12px}
+.mmx{display:flex;gap:3px;margin-top:6px}
+.mmx span{flex:1;text-align:left;white-space:nowrap;overflow:visible;width:0;font-size:10.5px;color:var(--faint)}
 .mmt{font-size:11.5px;color:var(--dim);margin-top:8px;display:flex;justify-content:space-between}
 #mapa2{height:210px;border-radius:16px;background:#111;margin-top:12px}
 .resumo{padding:22px 22px 0;position:relative;z-index:2}
@@ -150,9 +151,9 @@ a{color:inherit;text-decoration:none}
     <div class="oi" id="oi">Bom dia, Phelipe</div>
     <div class="tl2">
       <div class="temp" id="temp">--°</div>
-      <div class="cond"><b id="cond">Carregando…</b><span id="mm"></span><span id="sens"></span></div>
+      <div class="cond"><b id="cond">Carregando…</b><span id="mm"></span><span id="sens"></span><span id="ar" style="display:none"><i></i><em></em></span></div>
     </div>
-    <div><span class="ar" id="ar" style="display:none"><i></i><span></span></span><span class="vivo" id="vivo"></span></div>
+    <div class="vivo" id="vivo"></div>
   </div>
   <div class="glass">
     <div class="gh"><span class="seg"><span class="sg2" data-d="0">Hoje</span><span class="sg2" data-d="1">Amanhã</span></span><b id="picochuva"></b></div>
@@ -274,19 +275,19 @@ for(const d of gotas){d.y+=d.v;if(d.y>1){d.y=-.05;d.x=Math.random()}const X=d.x*
 requestAnimationFrame(loop)})();
 
 /* ---------- chuva em milímetros ---------- */
-// Chuva em mm de um dia inteiro (6h às 21h): Hoje ou Amanhã. Abre em Hoje até as 19h; depois, em Amanhã
+// Chuva em mm do dia inteiro (0h às 23h): Hoje ou Amanhã. Abre em Hoje até as 19h; depois, em Amanhã
 let previsaoChuva=null;
 function graficoChuva(w,qual){
   previsaoChuva=w;
   if(qual==null)qual=new Date().getHours()>=19?1:0;
   document.querySelectorAll('.sg2').forEach(b=>b.classList.toggle('on',+b.dataset.d===qual));
   const T=w.hourly.time.map(t=>new Date(t)),d=new Date();d.setDate(d.getDate()+qual);
-  let i=T.findIndex(t=>t.toDateString()===d.toDateString()&&t.getHours()===6);if(i<0)i=0;
-  const MM=w.hourly.precipitation.slice(i,i+16),P=w.hourly.precipitation_probability.slice(i,i+16),Hs=T.slice(i,i+16);
+  let i=T.findIndex(t=>t.toDateString()===d.toDateString()&&t.getHours()===0);if(i<0)i=0;
+  const MM=w.hourly.precipitation.slice(i,i+24),P=w.hourly.precipitation_probability.slice(i,i+24),Hs=T.slice(i,i+24);
   const agoraH=qual===0?new Date().getHours():-1;
   const teto=Math.max(2,...MM),fmt=v=>v.toLocaleString('pt-BR',{maximumFractionDigits:1});
-  $('mmbar').innerHTML=MM.map((v,k)=>`<div class="${Hs[k].getHours()===agoraH?'ag':''}"><em>${v>=.5?fmt(v):''}</em><i style="height:${Math.max(3,v/teto*100*.82)}%;opacity:${v>0?(.45+P[k]/180).toFixed(2):.18}"></i></div>`).join('');
-  $('mmx').innerHTML=Hs.map((t,k)=>t.getHours()===agoraH?'<span class="ag">agora</span>':`<span>${k%3===0?t.getHours()+'h':''}</span>`).join('');
+  $('mmbar').innerHTML=MM.map((v,k)=>`<div class="${Hs[k].getHours()===agoraH?'ag':''}"><em>${v>=1?fmt(v):''}</em><i style="height:${Math.max(3,v/teto*100*.82)}%;opacity:${v>0?(.45+P[k]/180).toFixed(2):.18}"></i></div>`).join('');
+  $('mmx').innerHTML=Hs.map((t,k)=>t.getHours()===agoraH?'<span class="ag">agora</span>':`<span>${k%6===0?t.getHours()+'h':''}</span>`).join('');
   const tot=MM.reduce((x,y)=>x+y,0),mx=Math.max(...MM),k=MM.indexOf(mx);
   $('picochuva').textContent=mx>=.1?`mais forte às ${Hs[k].getHours()}h · ${fmt(mx)} mm`:'sem chuva';
   $('mmtot').textContent=(tot>=.1?`total: ${fmt(tot)} mm`:'nada previsto')+' · '+d.toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'});
@@ -297,8 +298,8 @@ document.querySelectorAll('.sg2').forEach(b=>b.onclick=()=>{if(previsaoChuva)gra
 function ar(a){
   if(!a||!a.current||a.current.us_aqi==null)return;
   const v=Math.round(a.current.us_aqi);
-  const[txt,cor]=v<=50?['Ar bom','#7fdc9a']:v<=100?['Ar moderado','#f2d36b']:v<=150?['Ar ruim para sensíveis','#ffa25e']:v<=200?['Ar ruim','#ff6b6b']:['Ar muito ruim','#c58cff'];
-  const e=$('ar');e.style.display='inline-flex';e.querySelector('i').style.background=cor;e.querySelector('span').textContent=`${txt} · ${v}`;
+  const[txt,cor]=v<=50?['bom','#7fdc9a']:v<=100?['moderado','#f2d36b']:v<=150?['ruim','#ffa25e']:v<=200?['muito ruim','#ff6b6b']:['péssimo','#c58cff'];
+  const e=$('ar');e.style.display='flex';e.querySelector('i').style.background=cor;e.querySelector('em').textContent=`ar ${txt} · ${v}`;
 }
 
 /* ---------- ícones do tempo ---------- */
