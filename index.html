@@ -17,7 +17,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--txt);font-family:Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 .wrap{max-width:440px;margin:0 auto;padding-bottom:40px}
-.sky{position:relative;height:430px;overflow:hidden;border-radius:0 0 32px 32px;transition:background 1s}
+.sky{position:relative;height:460px;overflow:hidden;border-radius:0 0 32px 32px;transition:background 1s}
 .sky canvas{position:absolute;inset:0;width:100%;height:100%}
 .cloud{position:absolute;border-radius:50%;background:rgba(255,255,255,.18);filter:blur(28px);animation:drift linear infinite}
 @keyframes drift{from{transform:translateX(-60%)}to{transform:translateX(160%)}}
@@ -28,8 +28,10 @@ body{background:var(--bg);color:var(--txt);font-family:Manrope,system-ui,sans-se
 .t sup{font-size:48px;vertical-align:top;margin-left:2px}
 .cond{font-size:18px;font-weight:500;margin-top:4px}
 .mm{font-size:14px;color:rgba(255,255,255,.75);margin-top:2px}
-.arc{position:absolute;left:24px;right:24px;bottom:22px;height:70px}
-.arc span{position:absolute;bottom:-4px;font-size:12px;color:rgba(255,255,255,.7)}
+.sunw{position:absolute;left:24px;right:24px;bottom:14px}
+.sunw svg{width:100%;height:auto;display:block;max-height:78px}
+.sunl{display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.8);margin-top:2px}
+#smid{font-weight:600;color:#fff}
 .pill{display:inline-block;margin-top:12px;font-size:13px;font-weight:500;padding:6px 12px;border-radius:99px;background:rgba(255,255,255,.18);backdrop-filter:blur(10px);width:fit-content}
 .sec{margin:16px 14px 0;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px;overflow:hidden}
 .h{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
@@ -86,15 +88,21 @@ a.nw,a.card-link{display:block;color:inherit;text-decoration:none}
     <canvas id="rain"></canvas>
     <div class="hero">
       <div class="date" id="date"></div>
-      <div class="hi">Bom dia, Phelipe</div>
+      <div class="hi" id="hi">Bom dia, Phelipe</div>
       <div class="t" id="temp">--<sup>°</sup></div>
       <div class="cond" id="cond">Carregando…</div>
       <div class="mm" id="mm"></div>
       <div class="pill" id="pill" style="display:none"></div>
-      <svg class="arc" viewBox="0 0 400 70" preserveAspectRatio="none" id="arcsvg">
-        <path d="M0 68 Q200 -40 400 68" fill="none" stroke="rgba(255,255,255,.35)" stroke-dasharray="3 5"/>
-        <circle id="sun" r="7" fill="#fff4d6"/>
-      </svg>
+      <div class="sunw" id="sunw" style="visibility:hidden">
+        <svg viewBox="0 0 300 70">
+          <line x1="6" y1="62" x2="294" y2="62" stroke="rgba(255,255,255,.3)"/>
+          <path d="M20 62 Q150 -38 280 62" fill="none" stroke="rgba(255,255,255,.35)" stroke-dasharray="2 5"/>
+          <path id="sprog" fill="none" stroke="#ffd98a" stroke-width="2.5" stroke-linecap="round"/>
+          <circle id="sunglow" r="13" fill="#ffd98a" opacity=".25"/>
+          <circle id="sun" r="6.5" fill="#fff4d6"/>
+        </svg>
+        <div class="sunl"><span id="sr"></span><span id="smid"></span><span id="ss"></span></div>
+      </div>
     </div>
   </div>
 
@@ -108,7 +116,7 @@ a.nw,a.card-link{display:block;color:inherit;text-decoration:none}
     <div class="h">Radar de chuva · ao vivo <b id="frametime"></b></div>
     <div id="map"></div>
     <div class="mapbar"><span id="pp" style="cursor:pointer">❚❚</span><div class="prog"><i id="prog"></i></div><span>últimas 2h</span></div>
-    <div class="lg">fraca <i style="background:#88ddee"></i><i style="background:#0099cc"></i><i style="background:#ffaa00"></i><i style="background:#ff4400"></i> forte</div>
+    <div class="lg">fraca <i style="background:#88ddee"></i><i style="background:#0099cc"></i><i style="background:#ffaa00"></i><i style="background:#ff4400"></i> forte<span style="margin-left:auto">mapa: Esri · radar: RainViewer</span></div>
   </div>
 
   <div class="sec">
@@ -161,6 +169,7 @@ function skyFor(h){
 }
 function setSky(h,rainy){const s=document.getElementById('sky');s.style.background=rainy?"linear-gradient(180deg,#3a4556 0%,#56657a 60%,#7b8799 100%)":skyFor(h)}
 setSky(now.getHours(),false);
+{const h=now.getHours();document.getElementById('hi').textContent=(h>=5&&h<12?'Bom dia':h>=12&&h<18?'Boa tarde':'Boa noite')+', Phelipe'}
 
 let raining=false;
 const cv=document.getElementById('rain'),cx=cv.getContext('2d');let drops=[];
@@ -171,9 +180,27 @@ for(let i=0;i<120;i++)drops.push({x:Math.random(),y:Math.random(),v:.006+Math.ra
 for(const d of drops){d.y+=d.v;if(d.y>1){d.y=-.05;d.x=Math.random()}const X=d.x*cv.width,Y=d.y*cv.height;cx.moveTo(X,Y);cx.lineTo(X-2*devicePixelRatio,Y+d.l*devicePixelRatio)}cx.stroke()}
 requestAnimationFrame(loop)})();
 
-function sun(rise,set){
-  const t=(now-rise)/(set-rise),c=Math.max(0,Math.min(1,t)),x=400*c,y=(1-c)*(1-c)*68+2*(1-c)*c*(-40)+c*c*68;
-  const s=document.getElementById('sun');s.setAttribute('cx',x);s.setAttribute('cy',y);s.style.opacity=(t<0||t>1)?.25:1;
+function sun(w){
+  const R=w.daily.sunrise.map(t=>new Date(t)),S=w.daily.sunset.map(t=>new Date(t)),agora=new Date();
+  const f=d=>d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  const dur=ms=>{const m=Math.round(ms/6e4);return m<60?`${m} min`:`${Math.floor(m/60)} h ${String(m%60).padStart(2,'0')}`};
+  const P=c=>[(1-c)*(1-c)*20+2*(1-c)*c*150+c*c*280,(1-c)*(1-c)*62+2*(1-c)*c*(-38)+c*c*62];
+  let i=R.findIndex((r,k)=>agora<S[k]);if(i<0)i=R.length-1;
+  const rise=R[i],set=S[i],dia=agora>=rise&&agora<set,amanha=i>0;
+  $('sr').textContent=`↑ ${f(rise)}`+(amanha?' amanhã':'');
+  $('ss').textContent=`${f(set)} ↓`;
+  const sunEl=$('sun'),glow=$('sunglow'),prog=$('sprog');
+  if(dia){
+    const c=(agora-rise)/(set-rise),[x,y]=P(c);
+    let d='';for(let k=0;k<=40;k++){const[px,py]=P(c*k/40);d+=(k?'L':'M')+px.toFixed(1)+' '+py.toFixed(1)}
+    prog.setAttribute('d',d);sunEl.setAttribute('cx',x);sunEl.setAttribute('cy',y);glow.setAttribute('cx',x);glow.setAttribute('cy',y);
+    sunEl.style.display=glow.style.display='';
+    $('smid').textContent=`pôr do sol em ${dur(set-agora)}`;
+  }else{
+    prog.setAttribute('d','');sunEl.style.display=glow.style.display='none';
+    $('smid').textContent=`nasce em ${dur(rise-agora)}`;
+  }
+  $('sunw').style.visibility='visible';
 }
 
 const CL='<path d="M8 19h9.5a4.5 4.5 0 0 0 .6-8.96A6 6 0 0 0 6.5 11a4 4 0 0 0 1.5 8z" fill="#e8edf5"/>';
@@ -246,12 +273,15 @@ live(WURL,window.WEATHER).then(({d:w,live:L1})=>{
   const pm=w.daily.precipitation_probability_max[0];
   if(pm>=40){const p=document.getElementById('pill');p.style.display='block';p.textContent=`☂ Leve guarda-chuva · ${pm}% de chuva`}
   document.getElementById('rainmax').textContent=`chuva até ${pm}% hoje`;
-  sun(new Date(w.daily.sunrise[0]),new Date(w.daily.sunset[0]));
+  sun(w);setInterval(()=>sun(w),6e4);
   hours(w,c);days(w,c);
 }).catch(()=>{document.getElementById('cond').textContent="Sem conexão com o serviço de clima"});
 
 try{const map=L.map('map',{zoomControl:false,attributionControl:false}).setView([LAT,LON],8);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:12}).addTo(map);
+const ESRI='https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_';
+L.tileLayer(ESRI+'Base/MapServer/tile/{z}/{y}/{x}',{maxZoom:12}).addTo(map);
+map.createPane('rotulos').style.zIndex=650;map.getPane('rotulos').style.pointerEvents='none';
+L.tileLayer(ESRI+'Reference/MapServer/tile/{z}/{y}/{x}',{maxZoom:12,pane:'rotulos'}).addTo(map);
 L.circleMarker([LAT,LON],{radius:6,color:'#fff',weight:2,fillColor:'#8ab4ff',fillOpacity:1}).addTo(map);
 let frames=[],layers=[],fi=0,playing=true;
 live('https://api.rainviewer.com/public/weather-maps.json',window.RADAR).then(({d})=>{
