@@ -21,15 +21,17 @@
   }
   function icone(nome,cls){return `<img class="${cls||'ic-arte'}" src="${ICONES}${nome}.svg" alt="">`}
 
-  // Céu de cada situação, com a luz do sol ou da lua no canto da arte
+  // Céu de cada situação, da tela inteira: cor viva no topo, escurecendo no mesmo tom até embaixo
+  // (os cartões de vidro ficam por cima). A luz do sol ou da lua fica no canto da arte.
   function fundo(tipo){
     const F={
-      sol:'radial-gradient(70% 45% at 82% 12%,rgba(255,214,140,.55),rgba(255,214,140,0) 70%),linear-gradient(180deg,#1b56c4 0%,#3b86de 42%,#7db3ec 72%,rgba(125,179,236,0) 100%)',
-      nuvem:'radial-gradient(70% 45% at 82% 12%,rgba(255,240,210,.25),rgba(255,240,210,0) 70%),linear-gradient(180deg,#45628f 0%,#6f88ad 45%,#93a7c4 72%,rgba(147,167,196,0) 100%)',
-      chuva:'linear-gradient(180deg,#2c3a52 0%,#45556f 48%,#5d6c84 74%,rgba(93,108,132,0) 100%)',
-      noite:'radial-gradient(60% 40% at 80% 14%,rgba(160,180,255,.22),rgba(160,180,255,0) 70%),linear-gradient(180deg,#060a22 0%,#0f1640 45%,#1c2257 74%,rgba(28,34,87,0) 100%)',
-      noiteNuvem:'linear-gradient(180deg,#0e1430 0%,#1c2446 50%,#2a3256 74%,rgba(42,50,86,0) 100%)',
-      temporal:'linear-gradient(180deg,#151a28 0%,#262d40 50%,#343c52 74%,rgba(52,60,82,0) 100%)'};
+      sol:'radial-gradient(80% 40% at 82% 8%,rgba(255,220,150,.55),rgba(255,220,150,0) 70%),linear-gradient(180deg,#1d5cc8 0%,#3c86dc 22%,#2b6bb8 42%,#18396e 68%,#0c1630 100%)',
+      aurora:'radial-gradient(90% 38% at 78% 12%,rgba(255,196,140,.6),rgba(255,196,140,0) 70%),linear-gradient(180deg,#22306e 0%,#5b4791 18%,#b36b8f 34%,#5a3e6e 56%,#24193d 78%,#0f0c1c 100%)',
+      nuvem:'radial-gradient(80% 40% at 82% 8%,rgba(255,240,210,.28),rgba(255,240,210,0) 70%),linear-gradient(180deg,#47648f 0%,#6d87ab 22%,#4c6385 44%,#2a3854 70%,#121828 100%)',
+      chuva:'linear-gradient(180deg,#2e3d57 0%,#4a5b76 22%,#35445e 44%,#1e2739 70%,#0d1119 100%)',
+      noite:'radial-gradient(70% 36% at 80% 10%,rgba(160,180,255,.24),rgba(160,180,255,0) 70%),linear-gradient(180deg,#060a24 0%,#111a4a 24%,#1b2158 44%,#121638 70%,#080a18 100%)',
+      noiteNuvem:'linear-gradient(180deg,#0e1430 0%,#1d2648 26%,#20284a 46%,#131833 72%,#080a16 100%)',
+      temporal:'radial-gradient(80% 40% at 78% 6%,rgba(130,165,255,.2),rgba(130,165,255,0) 70%),linear-gradient(180deg,#0f1832 0%,#1e2b4b 26%,#1b2541 46%,#111729 72%,#080a12 100%)'};
     return F[tipo];
   }
 
@@ -50,6 +52,9 @@
       if(dia){html=icone('clear-day');tipo='sol'}
       else{html=lua(p);tipo='noite';estrelas=180;legenda=`${nomeFase(p)} · ${Math.round((1-Math.cos(2*Math.PI*p))/2*100)}% iluminada`}
     }
+    // Das 5h às 8h, céu limpo ou com poucas nuvens ganha a cor do amanhecer
+    const h=data.getHours();
+    if(tipo==='sol'&&h>=5&&h<8)tipo='aurora';
     return{html,fundo:fundo(tipo),tipo,estrelas,chuva:chuva||temporal,raio:temporal,legenda};
   };
 
