@@ -55,6 +55,7 @@ RESERVA = {
     "São Paulo": [G1.format("sp/sao-paulo")],
     "IA e tech": [G1.format("tecnologia")],
     "Ciência": [G1.format("ciencia"), "https://canaltech.com.br/rss/espaco/"],
+    "Games": ["https://br.ign.com/feed.xml", "https://www.adrenaline.com.br/games/feed/"],
     "Cultura": [G1.format("pop-arte")],
 }
 NOMES_FONTE = {"g1.globo.com": "G1", "bbci.co.uk": "BBC News Brasil"}
@@ -259,7 +260,7 @@ OG_IMAGE = [re.compile(r"""<meta[^>]+property=["']og:image["'][^>]+content=["'](
 def link_original(link):
     """O link do Google Notícias é um desvio; o próprio Google informa a matéria original nesta consulta."""
     aid = link.split("/articles/")[1].split("?")[0]
-    html = baixar(f"https://news.google.com/rss/articles/{aid}", tentativas=1).decode("utf-8", "ignore")
+    html = baixar(f"https://news.google.com/rss/articles/{aid}", tentativas=2).decode("utf-8", "ignore")
     sg = re.search(r'data-n-a-sg="([^"]+)"', html).group(1)
     ts = re.search(r'data-n-a-ts="([^"]+)"', html).group(1)
     pedido = [[["Fbv4je", f'["garturlreq",[["X","X",["X","X"],null,null,1,1,"US:en",null,1,null,null,null,null,null,0,1],'
@@ -362,14 +363,17 @@ def neste_dia(hoje):
 
 
 CLIMA_URL = ("https://api.open-meteo.com/v1/forecast?latitude=-23.55&longitude=-46.63"
-             "&current=temperature_2m,apparent_temperature,weather_code,precipitation"
-             "&hourly=temperature_2m,precipitation_probability,precipitation,weather_code"
-             "&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max"
-             "&timezone=America%2FSao_Paulo&forecast_days=7")
+             "&current=temperature_2m,apparent_temperature,weather_code,precipitation,relative_humidity_2m,"
+             "wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,uv_index,dew_point_2m"
+             "&hourly=temperature_2m,precipitation_probability,precipitation,weather_code,uv_index,visibility"
+             "&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max,"
+             "uv_index_max,precipitation_sum"
+             "&timezone=America%2FSao_Paulo&forecast_days=14")
 
 
 AR_URL = ("https://air-quality-api.open-meteo.com/v1/air-quality?latitude=-23.55&longitude=-46.63"
-          "&current=us_aqi,pm2_5&timezone=America%2FSao_Paulo")
+          "&current=us_aqi,pm2_5,pm10,ozone,nitrogen_dioxide,us_aqi_pm2_5,us_aqi_pm10,us_aqi_ozone,us_aqi_nitrogen_dioxide"
+          "&timezone=America%2FSao_Paulo")
 
 
 def json_de(url, nome):
@@ -415,6 +419,33 @@ def linhas_cptm():
     return saida
 
 
+VIAMOB_URL = "https://trilhos.motiva.com.br/viamobilidade8e9/situacao-das-linhas"
+# cada linha tem a sua lista de ocorrências, identificada pela cor da borda
+VIAMOB = {"#AFA690": (8, "Diamante", "#97a098"), "#34AEA4": (9, "Esmeralda", "#01a9a7")}
+
+
+def linhas_viamobilidade():
+    """Linhas 8 e 9: a página oficial lista cada mudança de situação; a mais recente é a atual."""
+    pagina = html_mod.unescape(baixar(VIAMOB_URL).decode("utf-8", "ignore"))
+    saida, vistas = [], set()
+    for cor, quando, titulo, desc in re.findall(
+            r'border-left-color:\s*(#[0-9A-Fa-f]{6});">\s*<p class="post-time">([^<]+)</p>\s*'
+            r'<h2 class="post-title">([^<]+)</h2>\s*<div class="post-description">(.*?)</div>', pagina, re.S):
+        info = VIAMOB.get(cor.upper())
+        if not info or info[0] in vistas:
+            continue
+        vistas.add(info[0])
+        detalhe = re.sub(r"<[^>]+>", " ", desc).strip()
+        titulo = re.sub(r"([a-z])([A-Z])", r"\1 \2", titulo.strip())   # "MaioresIntervalos" → "Maiores Intervalos"
+        saida.append({"numero": info[0], "nome": info[1], "cor": info[2], "situacao": titulo,
+                      "detalhe": "" if detalhe.startswith("Alteração automática") else detalhe,
+                      "quando": quando.replace(" às ", " "), "fonte": "ViaMobilidade",
+                      "link": "https://trilhos.motiva.com.br/viamobilidade8e9/situacao-das-linhas"})
+    if not saida:
+        raise ValueError("lista de ocorrências não encontrada")
+    return saida
+
+
 def linha9_pelas_noticias():
     """A ViaMobilidade não publica a situação num formato aberto: procura notícias de problema na
     Linha 9-Esmeralda nas últimas 3 horas."""
@@ -434,12 +465,18 @@ def linha9_pelas_noticias():
 
 def linhas():
     lista = []
-    for nome, func in (("Metrô", linhas_metro), ("CPTM", linhas_cptm), ("Linha 9", linha9_pelas_noticias)):
+    for nome, func in (("Metrô", linhas_metro), ("CPTM", linhas_cptm), ("ViaMobilidade", linhas_viamobilidade)):
         try:
             r = func()
             lista.extend(r if isinstance(r, list) else [r])
         except Exception as e:
             print(f"[aviso] linhas {nome}: {e}")
+    # se a ViaMobilidade falhar, a Linha 9 volta a ser vista pelas notícias
+    if not any(l["numero"] == 9 for l in lista):
+        try:
+            lista.append(linha9_pelas_noticias())
+        except Exception as e:
+            print(f"[aviso] linhas Linha 9 (notícias): {e}")
     lista.sort(key=lambda l: l["numero"])
     print("linhas: " + ", ".join(f'{l["numero"]}={l["situacao"]}' for l in lista))
     return lista
