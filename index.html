@@ -252,6 +252,7 @@ body.fora .ceu{filter:brightness(.62) saturate(.85)}
 .prog{flex:1;height:3px;background:var(--line);border-radius:3px;overflow:hidden}.prog i{display:block;height:100%;background:var(--rain);width:0;transition:width .4s}
 .lg{display:flex;gap:4px;align-items:center;font-size:11px;color:var(--dim);margin-top:8px}
 .lg i{width:26px;height:6px;border-radius:3px}
+.rprev{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:14px;line-height:1.4}.rprev:empty{display:none}.rprev small{display:block;font-size:11px;color:var(--dim);margin-top:2px}
 
 /* DESCOBRIR */
 .nasa{display:block;height:calc(400px + var(--safe-top));background:#05060a center/cover;position:relative;-webkit-mask-image:linear-gradient(180deg,#000 72%,transparent);mask-image:linear-gradient(180deg,#000 72%,transparent)}
@@ -361,8 +362,9 @@ body.fora .ceu{filter:brightness(.62) saturate(.85)}
   <div class="box">
     <div class="h">Radar de chuva <b id="frametime"></b></div>
     <div id="map"></div>
-    <div class="mapbar"><span id="pp" style="cursor:pointer">❚❚</span><div class="prog"><i id="prog"></i></div><span>2h atrás → +6h</span></div>
-    <div class="lg">fraca <i style="background:#88ddee"></i><i style="background:#0099cc"></i><i style="background:#ffaa00"></i><i style="background:#ff4400"></i> forte<span style="margin-left:auto">radar: RainViewer · previsão: Open-Meteo</span></div>
+    <div class="mapbar"><span id="pp" style="cursor:pointer">❚❚</span><div class="prog"><i id="prog"></i></div><span>últimas 2 horas</span></div>
+    <div class="lg">fraca <i style="background:#88ddee"></i><i style="background:#0099cc"></i><i style="background:#ffaa00"></i><i style="background:#ff4400"></i> forte<span style="margin-left:auto">radar: RainViewer</span></div>
+    <div class="rprev" id="rprev"></div>
   </div>
   <div class="box">
     <div class="h">Próximos 14 dias</div>
@@ -660,50 +662,58 @@ function novoMapa(id,interativo){
   L.circleMarker([LAT,LON],{radius:6,color:'#fff',weight:2,fillColor:'#8ab4ff',fillOpacity:1}).addTo(m);
   return m;
 }
-// Previsão para as próximas horas: o radar só mostra o passado, então depois do "agora" a animação
-// continua com a previsão de chuva (mm por hora) numa grade de 11 x 11 pontos ao redor de SP
-const GRADE={lat0:-24.4,dlat:.17,lon0:-47.6,dlon:.2,n:11};
-function corMm(v){return v<.1?null:v<.5?'#88ddee':v<2?'#0099cc':v<5?'#ffaa00':'#ff4400'}
-function camadaPrevisao(m,pontos,h){
-  const g=L.layerGroup(),{lat0,dlat,lon0,dlon,n}=GRADE;
-  pontos.forEach((p,k)=>{const v=p.hourly.precipitation[h],c=corMm(v);if(!c)return;
-    const la=lat0+Math.floor(k/n)*dlat,lo=lon0+(k%n)*dlon;
-    L.rectangle([[la-dlat/2,lo-dlon/2],[la+dlat/2,lo+dlon/2]],{stroke:false,fillColor:c,fillOpacity:.6,pane:'previsao',interactive:false}).addTo(g)});
-  return g;
+// Frase embaixo do mapa. O "agora" vem do próprio radar (pixels num raio de ~10 km do ponto),
+// para nunca contradizer o mapa; as próximas 2 horas vêm da previsão de 15 em 15 min do Open-Meteo.
+// (Antes a previsão era desenhada no mapa, mas a grade do modelo é grosseira e virava um borrão.)
+function chuvaNoRadar(d){
+  const f=d.radar.past[d.radar.past.length-1],z=7,n=2**z;
+  const X=(LON+180)/360*n*256,la=LAT*Math.PI/180,Y=(1-Math.log(Math.tan(la)+1/Math.cos(la))/Math.PI)/2*n*256;
+  const tx=Math.floor(X/256),ty=Math.floor(Y/256),px=Math.floor(X-tx*256),py=Math.floor(Y-ty*256);
+  return new Promise(ok=>{const im=new Image();im.crossOrigin='anonymous';
+    im.onload=()=>{try{const c=document.createElement('canvas');c.width=c.height=256;const g=c.getContext('2d');g.drawImage(im,0,0);
+      const R=8,px0=Math.max(0,px-R),py0=Math.max(0,py-R),a=g.getImageData(px0,py0,Math.min(256,px+R)-px0,Math.min(256,py+R)-py0).data;
+      let k=0;for(let i=3;i<a.length;i+=4)if(a[i]>0)k++;ok(k/(a.length/4)>.05)}catch(e){ok(null)}};
+    im.onerror=()=>ok(null);im.src=`${d.host}${f.path}/256/${z}/${tx}/${ty}/2/1_1.png`});
+}
+function frasePrevisao(w,radarChove){
+  const T=w.minutely_15.time.map(t=>new Date(t)),P=w.minutely_15.precipitation,agora=Date.now();
+  const i0=T.findIndex(t=>agora<+t+9e5);if(i0<0)return null;
+  const jan=P.slice(i0,i0+8),ts=T.slice(i0,i0+8),chove=v=>v>=.1;
+  const forca=v=>v<.6?'fraca':v<1.9?'moderada':'forte',pico=forca(Math.max(...jan));
+  const agoraTxt=radarChove===true?'Chovendo perto de você agora':radarChove===false?'Sem chuva no radar perto de você':null;
+  const chovendo=radarChove===true||(radarChove==null&&chove(jan[0]));
+  let prox;
+  if(!jan.some(chove))prox=chovendo?'deve parar logo, sem chuva prevista nas próximas 2 horas':'sem chuva prevista nas próximas 2 horas';
+  else if(chovendo){const k=jan.findIndex(v=>!chove(v));
+    prox=k===0?'deve parar logo':k<0?`deve continuar pelas próximas 2 horas (${pico})`:`deve parar por volta de ${hm(ts[k])}`}
+  else{const k=jan.findIndex(chove);
+    prox=k===0?`a previsão indica chuva ${pico} nas próximas 2 horas`:`chuva ${pico} pode começar por volta de ${hm(ts[k])}`}
+  return agoraTxt?`${agoraTxt}; ${prox}.`:prox[0].toUpperCase()+prox.slice(1)+'.';
 }
 try{
   mapa=novoMapa('map',true);mapas=[mapa];
-  mapas.forEach(m=>{const pn=m.createPane('previsao');pn.style.zIndex=420;pn.style.filter='blur(9px)';pn.style.pointerEvents='none'});
-  // quadros: {tipo:'radar', camadas:[uma por mapa], quando} ou {tipo:'prev', ...}
-  let quadros=[],fi=-1,rodando=true,nPassado=0;
+  let quadros=[],fi=-1,rodando=true;
   const mostra=i=>{
-    if(fi>=0)quadros[fi].camadas.forEach(c=>c.tipo==='radar'?c.l.setOpacity(0):c.m.removeLayer(c.l));
+    if(fi>=0)quadros[fi].camadas.forEach(l=>l.setOpacity(0));
     fi=i;const q=quadros[fi];
-    q.camadas.forEach(c=>c.tipo==='radar'?c.l.setOpacity(.8):c.l.addTo(c.m));
-    const rot=q.tipo==='radar'?hm(q.quando):`previsão ${q.quando.getHours()}h`;
-    $('frametime').textContent=rot;
-    ['frametime'].forEach(id=>$(id).style.color=q.tipo==='radar'?'':'var(--gold)');
+    q.camadas.forEach(l=>l.setOpacity(.8));
+    $('frametime').textContent=hm(q.quando);
     $('prog').style.width=((fi+1)/quadros.length*100)+'%';
   };
   const radar=aoVivo('https://api.rainviewer.com/public/weather-maps.json',()=>dados.then(d=>d.radar)).then(({d})=>d);
-  const lats=[],lons=[];for(let i=0;i<GRADE.n;i++)for(let j=0;j<GRADE.n;j++){lats.push((GRADE.lat0+i*GRADE.dlat).toFixed(2));lons.push((GRADE.lon0+j*GRADE.dlon).toFixed(2))}
-  const prev=fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&hourly=precipitation&forecast_hours=7&timezone=America%2FSao_Paulo`)
-    .then(r=>{if(!r.ok)throw 0;return r.json()}).catch(()=>null);
-  Promise.all([radar,prev]).then(([d,pontos])=>{
-    if(d)d.radar.past.forEach(f=>quadros.push({tipo:'radar',quando:new Date(f.time*1000),
-      camadas:mapas.map(m=>({tipo:'radar',m,l:L.tileLayer(`${d.host}${f.path}/256/{z}/{x}/{y}/2/1_1.png`,{opacity:0,maxNativeZoom:7,maxZoom:12}).addTo(m)}))}));
-    nPassado=quadros.length;
-    if(Array.isArray(pontos)&&pontos.length===GRADE.n*GRADE.n){
-      const T=pontos[0].hourly.time.map(t=>new Date(t));
-      for(let h=1;h<T.length;h++)quadros.push({tipo:'prev',quando:T[h],camadas:mapas.map(m=>({tipo:'prev',m,l:camadaPrevisao(m,pontos,h)}))});
-    }
+  radar.then(d=>{
+    if(d)d.radar.past.forEach(f=>quadros.push({quando:new Date(f.time*1000),
+      camadas:mapas.map(m=>L.tileLayer(`${d.host}${f.path}/256/{z}/{x}/{y}/2/1_1.png`,{opacity:0,maxNativeZoom:7,maxZoom:12}).addTo(m))}));
     if(!quadros.length)return;
-    // marca no trilho onde termina o passado e começa a previsão
-    $('prog').parentNode.style.background=nPassado<quadros.length?`linear-gradient(90deg,var(--line) ${nPassado/quadros.length*100}%,rgba(255,208,138,.25) 0)`:'';
-    mostra(Math.max(0,nPassado-1));
-    const passo=()=>{if(rodando)mostra((fi+1)%quadros.length);setTimeout(passo,quadros[fi].tipo==='radar'?700:1300)};
+    mostra(quadros.length-1);
+    // anda pelos quadros e para um pouco mais no mais recente (o "agora")
+    const passo=()=>{if(rodando)mostra((fi+1)%quadros.length);setTimeout(passo,fi===quadros.length-1?2000:700)};
     setTimeout(passo,1200);
   });
+  const prev15=fetch(`https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&minutely_15=precipitation&past_minutely_15=1&forecast_minutely_15=10&timezone=America%2FSao_Paulo`)
+    .then(r=>{if(!r.ok)throw 0;return r.json()});
+  Promise.all([prev15,radar.then(d=>d?chuvaNoRadar(d):null)]).then(([w,rc])=>{const f=frasePrevisao(w,rc);
+      if(f)$('rprev').innerHTML=`${f}<small>agora: radar · próximas horas: previsão do Open-Meteo</small>`}).catch(()=>{});
   $('pp').onclick=e=>{rodando=!rodando;e.target.textContent=rodando?'❚❚':'▶'};
 }catch(e){$('map').innerHTML='<p style="padding:20px;color:#888">Mapa indisponível</p>'}
 
